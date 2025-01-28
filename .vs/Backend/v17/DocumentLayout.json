@@ -1,0 +1,183 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\controllers\\registrycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\registrycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\controllers\\logoutcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\logoutcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\controllers\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\controllers\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\models\\adatbaziscontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\models\\adatbaziscontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|c:\\users\\kovacszsm\\desktop\\bemotivated\\backend\\backend\\dtos\\loggeduser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F3E9C5B5-2660-4C3C-92AE-BC56BB922829}|Backend\\Backend.csproj|solutionrelative:backend\\dtos\\loggeduser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Microsoft.NET.TargetFrameworkInference.targets",
+              "DocumentMoniker": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "ToolTip": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk\\targets\\Microsoft.NET.TargetFrameworkInference.targets",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003801|",
+              "WhenOpened": "2025-01-14T07:15:26.73Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RegistryController.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\RegistryController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\RegistryController.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\RegistryController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\RegistryController.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACkAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.445Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LogoutController.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\LogoutController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\LogoutController.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\LogoutController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\LogoutController.cs",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.447Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "LoginController.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\LoginController.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\LoginController.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\LoginController.cs",
+              "RelativeToolTip": "Backend\\Controllers\\LoginController.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAQwBoAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.449Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "LoginDTO.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\LoginDTO.cs",
+              "RelativeDocumentMoniker": "Backend\\Controllers\\LoginDTO.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Controllers\\LoginDTO.cs",
+              "RelativeToolTip": "Backend\\Controllers\\LoginDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.45Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "LoggedUser.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\DTOs\\LoggedUser.cs",
+              "RelativeDocumentMoniker": "Backend\\DTOs\\LoggedUser.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\DTOs\\LoggedUser.cs",
+              "RelativeToolTip": "Backend\\DTOs\\LoggedUser.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.45Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\User.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Models\\User.cs",
+              "RelativeToolTip": "Backend\\Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.451Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AdatbazisContext.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Models\\AdatbazisContext.cs",
+              "RelativeDocumentMoniker": "Backend\\Models\\AdatbazisContext.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Models\\AdatbazisContext.cs",
+              "RelativeToolTip": "Backend\\Models\\AdatbazisContext.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAACYAAABFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.452Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Program.cs",
+              "RelativeDocumentMoniker": "Backend\\Program.cs",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Program.cs",
+              "RelativeToolTip": "Backend\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwBgAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-01-14T07:12:23.769Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Backend\\Properties\\launchSettings.json",
+              "ToolTip": "C:\\Users\\kovacszsm\\Desktop\\BeMotivated\\backend\\Backend\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Backend\\Properties\\launchSettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAABFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-01-14T07:12:23.357Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
