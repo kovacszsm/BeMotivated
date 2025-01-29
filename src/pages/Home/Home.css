@@ -1,0 +1,316 @@
+.home-page {
+    margin: 0;
+    padding: 0;
+    font-family: 'Raleway', sans-serif;
+    background-color: #fdf6e4;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  h1,
+  h2,
+  p {
+    margin: 0;
+  
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  /* Header */
+  header {
+    background-color: #fef9e7;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 10%;
+    border-bottom: 2px solid #f0e6d2;
+  }
+  
+  header .logo h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.8rem;
+    color: #000;
+  }
+  
+  header nav a {
+    font-size: 1rem;
+    color: #000;
+    margin-left: 20px;
+    font-weight: bold;
+  }
+  
+  header nav a.login-btn {
+    background-color: #007f31;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+  }
+  
+  header nav a.register-btn {
+    background-color: #3b3027;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 5px;
+  }
+  
+  header nav a:hover {
+    opacity: 0.8;
+  }
+  
+  /* Hero szakasz */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 83vh;
+    text-align: left;
+    padding: 40px 10%;
+    background-color: #fff8e6;
+  }
+  
+  .hero h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 15px;
+    max-width: 600px;
+    line-height: 1.2;
+    font-family: 'Dancing Script', cursive;
+  }
+  
+  .hero p {
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 10px 0 30px 0;
+    color: #555;
+  }
+  
+  .hero .cta {
+    font-size: 1rem;
+    background-color: #3b3027;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    display: inline-block;
+    width: fit-content;
+    text-align: center;
+  }
+  
+  .hero .cta:hover {
+    background-color: #2b221c;
+  }
+  
+  /* Tartalom */
+  .content {
+    background-color: #2b221c;
+  }
+  
+  /* Funkciók */
+  .features {
+    padding: 40px 10%;
+    text-align: center;
+  }
+  
+  .features h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .features p {
+    font-size: 1rem;
+    margin-bottom: 40px;
+    color: #d4d4d4;
+  }
+  
+  .feature-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  
+  .feature-card {
+    background-color: #fff7e6;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid #f4d35e;
+    position: relative;
+  }
+  
+  .feature-card::before,
+  .feature-card::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #1d1b16;
+    border-radius: 50%;
+  }
+  
+  .feature-card::before {
+    top: 10px;
+    left: 10px;
+  }
+  
+  .feature-card::after {
+    bottom: 10px;
+    right: 10px;
+  }
+  
+  .feature-card .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #8e44ad;
+    color: #fff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+  }
+  
+  .feature-card h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .feature-card p {
+    font-size: 0.95rem;
+    color: #333;
+  }
+  
+  /* Csomagok */
+  .packages {
+    padding: 40px 10%;
+    text-align: center;
+  }
+  
+  .packages h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #fff;
+    text-decoration: underline;
+    text-transform: uppercase;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .packages p {
+    font-size: 1rem;
+    margin-bottom: 40px;
+    color: #d4d4d4;
+  }
+  
+  .package-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .package-card {
+    background-color: #fffaf0;
+    border-radius: 15px;
+    padding: 20px;
+    width: 320px;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .package-card.starter {
+    background-color: #fdf9ef;
+    border: 5px solid white;
+  }
+  
+  .package-card.premium {
+    background-color: #fffbe9;
+    border: 5px solid #c7a321;
+  }
+  
+  .package-card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .package-card .price {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #000;
+    text-decoration: underline;
+    text-decoration-color: #888;
+    text-underline-offset: 7px;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .package-card .subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .package-card .discount {
+    font-size: 1rem;
+    color: #000;
+    margin: 10px 0;
+  }
+  
+  .package-card .discount .strike {
+    text-decoration: line-through;
+    color: #888;
+    margin-right: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .package-card .discount .highlight {
+    font-weight: bold;
+    color: black;
+    font-size: 1rem;
+  }
+  
+  .package-card ul {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .package-card ul li {
+    font-size: 1rem;
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+    font-family: 'Raleway', sans-serif;
+  }
+  
+  .package-card ul li p {
+    margin-bottom: 0px;
+    color: black;
+  }
+  
+  .package-card ul li .check {
+    color: #007f31;
+    margin-right: 7px;
+    font-weight: bold;
+  }
+  
+  .package-card ul li .cross {
+    color: #d9534f;
+    margin-right: 7px;
+    font-weight: bold;
+  }
