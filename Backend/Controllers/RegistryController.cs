@@ -31,7 +31,7 @@ namespace Backend.Controllers
                     await context.Users.AddAsync(user);
                     await context.SaveChangesAsync();
 
-                    Program.SendEmail(user.Email,"Regisztráció", $"https://localhost:7272/api/Registry?felhasznaloNev={user.FelhasznaloNev}&email={user.Email}");
+                    Program.SendEmail(user.Email,"Regisztráció", $"https://localhost:7040/api/Registry?felhasznaloNev={user.FelhasznaloNev}&email={user.Email}");
                     return Ok("Sikeres regisztráció. Ellenőrízze az emailjeit és véglegesítse a regisztrációt!");
                 }
                 catch (Exception ex)
