@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Footer from "../../components/Footer/Footer";
 
 
-function Home() {
+export const Home = () =>  {
     return (
         <div className="home-page">
             <header>
@@ -105,5 +105,3 @@ function Home() {
         </div>
     );
 }
-
-export default Home;

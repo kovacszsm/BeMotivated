@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
-function Login() {
+export const Login = () => {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -97,5 +97,3 @@ function Login() {
         </div>
     );
 }
-
-export default Login;

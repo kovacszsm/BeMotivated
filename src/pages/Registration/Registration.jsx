@@ -22,7 +22,7 @@ const generateSalt = (length = 16) => {
   return salt;
 };
 
-const Registration = () => {
+export const Registration = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -127,4 +127,3 @@ const Registration = () => {
   );
 };
 
-export default Registration;
