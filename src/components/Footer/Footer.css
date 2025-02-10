@@ -1,0 +1,87 @@
+.footer {
+    background-color: #2D221A;
+    color: white;
+    padding: 40px 20px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    flex: 1;
+  }
+  
+  .footer-text {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .footer-subtext {
+    font-size: 14px;
+    opacity: 0.75;
+  }
+  
+  .footer-link {
+    text-decoration: underline;
+    color: white;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .footer-link:hover {
+    color: #facc15;
+  }
+  
+  .footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+  }
+  
+  .footer-links li {
+    display: inline;
+  }
+  
+  .footer-social {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+  }
+  
+  .social-link {
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    transition: color 0.3s ease-in-out, transform 0.3s ease;
+  }
+  
+  .social-link:hover {
+    color: #facc15;
+    transform: scale(1.2); /* Finom animáció, hogy nagyobbak legyenek az ikonok */
+  }
+  
+  .social-link svg {
+    transition: transform 0.3s ease;
+  }
+  
+  .social-link:hover svg {
+    transform: scale(1.2);
+  }
+  
