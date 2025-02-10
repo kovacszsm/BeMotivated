@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
+import {Footer} from "../../components/Footer/Footer";
 
 export const Login = () => {
 
@@ -94,6 +95,7 @@ export const Login = () => {
                     </Link>
                 </p>
             </div>
+            <Footer />
         </div>
     );
 }

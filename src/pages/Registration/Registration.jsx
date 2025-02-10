@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import "./Registration.css";
+import {Footer} from "../../components/Footer/Footer";
 
 // SHA-256 hash készítése (Web Crypto API használatával)
 const hashPassword = async (password) => {
@@ -123,6 +124,7 @@ export const Registration = () => {
           Már van fiókod? <Link to="/login" className="login-btn">Jelentkezz be</Link>
         </p>
       </div>
+      <Footer />
     </div>
   );
 };
