@@ -6,7 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Biztosítja, hogy az oldal legalább a képernyő teljes magasságát lefedje */
+  min-height: 100vh; /* Biztosítja, hogy az oldal legalább a képernyő teljes magasságát lefedje  */
 }
   
 .login-container {
@@ -76,13 +76,3 @@
     margin-top: 20px;
     font-size: 0.9rem;
   }
-
-  .footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    background-color: #2D221A;
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-}

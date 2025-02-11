@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
-import {Footer} from "../../components/Footer/Footer";
+import { Footer } from "../../components/Footer/Footer";
 
 export const Login = () => {
 
@@ -64,36 +64,39 @@ export const Login = () => {
     };
 
     return (
-        <div className="login-page">
-            <div className="login-container">
-                <h1><i>BeMotivated</i></h1>
-                <h2>Bejelentkezés</h2>
-                <hr />
-                <form onSubmit={handleSubmit}>
-                    <input
-                        type="text"
-                        placeholder="Felhasználónév"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Jelszó"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                    <button type="submit">
-                        Bejelentkezés
-                    </button>
-                </form>
-                <p className="small-text">
-                    Nincs fiókod?{' '}
-                    <Link to="/registration" className="register-btn">
-                        Regisztrálj be
-                    </Link>
-                </p>
+        <div>
+            <div className="login-page">
+                <div className="login-container">
+                    <h1><i>BeMotivated</i></h1>
+                    <h2>Bejelentkezés</h2>
+                    <hr />
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            placeholder="Felhasználónév"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="password"
+                            placeholder="Jelszó"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <button type="submit">
+                            Bejelentkezés
+                        </button>
+                    </form>
+                    <p className="small-text">
+                        Nincs fiókod?{' '}
+                        <Link to="/registration" className="register-btn">
+                            Regisztrálj be
+                        </Link>
+                    </p>
+                </div>
+
             </div>
             <Footer />
         </div>
