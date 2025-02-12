@@ -109,7 +109,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-height: none;
   overflow-y: visible;
 }
 
@@ -139,10 +138,7 @@ body {
   background-color: rgba(255, 215, 0, 0.2);
   padding: 6px 10px;
   border-radius: 6px;
-  text-align: center;
-  white-space: nowrap;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin: 8px 0;
 }
 
 .task-info {
@@ -153,24 +149,19 @@ body {
   flex-wrap: nowrap;
   width: fit-content;
   max-width: 90%;
-  padding: 5px 0;
   margin: 0 auto;
 }
 
 .task-icon {
   font-size: 22px;
   flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-width: 28px;
 }
 
 .task-text {
-  flex-grow: 1;
-  text-align: left;
   font-size: 16px;
   font-weight: bold;
+  text-align: left;
 }
 
 .task-actions {
@@ -207,4 +198,111 @@ body {
 
 .remove-task:hover {
   color: #dc3545;
+}
+
+/* Modális ablak stílusai */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #FFFDF2;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 4px;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.modal-error {
+  color: #dc3545;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.modal-buttons button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.modal-buttons button[type="submit"] {
+  background-color: #28a745;
+  color: #FFFDF2;
+}
+
+.modal-buttons button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+.modal-buttons button[type="button"] {
+  background-color: #dc3545;
+  color: #FFFDF2;
+}
+
+.modal-buttons button[type="button"]:hover {
+  background-color: #c82333;
+}
+
+/* Egyedi dropdown (select) stílus */
+.custom-dropdown {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width='10'%20height='10'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon%20points='0,0%205,5%2010,0'%20style='fill:%23000;'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+  cursor: pointer;
+}
+
+.custom-dropdown:focus {
+  outline: none;
+  border-color: #50c878;
+  box-shadow: 0 0 5px rgba(80, 200, 120, 0.5);
 }
