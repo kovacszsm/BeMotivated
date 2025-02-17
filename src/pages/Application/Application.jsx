@@ -250,15 +250,22 @@ export const Application = () => {
 
   return (
     <div className="application">
-      <header className="app-header">
-        <div className="profile">
-          <img src="/avatar.png" alt="Profilkép" className="avatar" />
-          <div className="user-info">
-            <h3>Felhasználó</h3>
-            <p>Szint: 5 | Streak: 10 nap</p>
-          </div>
-        </div>
-      </header>
+<header className="app-header">
+  <div className="user-profile">
+    <div className="avatar-section">
+      <img src="/avatar.png" alt="Profilkép" className="avatar" />
+      <div className="username">Felhasználó</div>
+    </div>
+    <div className="stats-section">
+      <div className="level">
+        <span className="level-icon">🏆</span> Szint : lvl 5
+      </div>
+      <div className="streak">
+        <span className="streak-icon">⚡</span> Streak: 10
+      </div>
+    </div>
+  </div>
+</header>
       <div className="week-grid">
         {weekDates.map((date, index) => (
           <div key={index} className="day-column">

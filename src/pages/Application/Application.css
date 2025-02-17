@@ -306,3 +306,88 @@ body {
   border-color: #50c878;
   box-shadow: 0 0 5px rgba(80, 200, 120, 0.5);
 }
+
+.app-header {
+  /* Gradienst most 225°-ban, azaz az ellenkező irányból jön a színátmenet */
+  background: linear-gradient(225deg, #fff7e6, #ffe0b2);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #ecdcc3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+/* Felhasználói profil konténer – már nem toljuk jobbra */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  /* Eltávolítottuk a margin-left: auto; sort, így alapértelmezett a bal oldal */
+}
+
+/* Avatar-szekció (függőlegesen: kép fölül, név alatta) */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Kör alakú avatar */
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Felhasználónév az avatar alatt */
+.username {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 0;
+}
+
+/* Szint és Streak: egymás alatt (vertikálisan) */
+.stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center; /* Középre igazítja a statisztikákat */
+}
+
+/* Szint doboz */
+.level {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Trófea ikon a szintnél */
+.level-icon {
+  margin-right: 5px;
+  color: #ffcc00;
+}
+
+/* Streak doboz */
+.streak {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+/* Villám ikon a streaknél */
+.streak-icon {
+  margin-right: 5px;
+  color: #ff8c00;
+}
