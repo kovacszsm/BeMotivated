@@ -1,5 +1,6 @@
 
 using Backend.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
@@ -55,9 +56,22 @@ namespace Backend
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Konfigurációs beállítások betöltése
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+            // Adatbázis-szolgáltatás regisztrálása
+            builder.Services.AddDbContext<AdatbazisContext>(options =>
+                options.UseMySQL(connectionString));
+
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;  //  JSON nevek legyenek pontosan olyanok, mint a modelben!
+    });
 
             //CORS
             builder.Services.AddCors(options =>
