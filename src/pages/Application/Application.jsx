@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Application.css";
 
-//asd
+
 
 const API_URL = `https://localhost:7040/api`;
 const storedUser = JSON.parse(sessionStorage.getItem("userData"));
