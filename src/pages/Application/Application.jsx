@@ -6,8 +6,8 @@ import "./Application.css";
 
 const API_URL = `https://localhost:7040/api`;
 const storedUser = JSON.parse(sessionStorage.getItem("userData"));
-console.log(storedUser.FelhasznaloNev);
-console.log(storedUser.Token);
+console.log(storedUser?.FelhasznaloNev);
+console.log(storedUser?.Token);
 
 
 
@@ -378,7 +378,7 @@ export const Application = () => {
         <div className="user-profile">
           <div className="avatar-section">
             <img src="/avatar.png" alt="Profilkép" className="avatar" />
-            <div className="username">{storedUser.FelhasznaloNev}</div>
+            <div className="username">{storedUser?.FelhasznaloNev}</div>
           </div>
           <div className="stats-section">
             <div className="level">
