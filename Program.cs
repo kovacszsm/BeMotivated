@@ -13,7 +13,7 @@ namespace Backend
 
         public static Dictionary<string, User> LoggedInUsers = new Dictionary<string, User>();
 
-        public static string GenerateSalt()//
+        public static string GenerateSalt()
         {
             Random random = new Random();
             string karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
