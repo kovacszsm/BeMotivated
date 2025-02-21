@@ -1,19 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Application.css";
 
-const days = ["Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"];
 
-const getFormattedDate = (offset) => {
-  const today = new Date();
-  const date = new Date(today);
-  date.setDate(today.getDate() + offset);
-  return date.toLocaleDateString("hu-HU", { year: "numeric", month: "2-digit", day: "2-digit" });
+
+const API_URL = `https://localhost:7040/api`;
+const storedUser = JSON.parse(sessionStorage.getItem("userData"));
+console.log(storedUser.FelhasznaloNev);
+console.log(storedUser.Token);
+
+
+
+const formatLocalDate = (date) => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${day}.${month}.${year}`;
 };
 
-// Példa kezdeti teendők (néhány napra)
+
+
+const weekDates = (() => {
+  const today = new Date();
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    return formatLocalDate(date);
+  });
+})();
+
+
+
+const dayNames = (() => {
+  const today = new Date();
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() + i);
+    return date.toLocaleDateString("hu-HU", { weekday: "long" });
+  });
+})();
+
+
+
 const initialTasks = {};
 
-// Előre definiált teendők kategóriák szerint (összesen 112 elem – itt például kategóriánként felsorolva)
+
+
 const predefinedTasks = {
   "Sport & Testmozgás": [
     { id: 1, text: "Edzés", icon: "🏋️‍♂️" },
@@ -141,6 +173,18 @@ const predefinedTasks = {
   ]
 };
 
+
+
+const getPredefinedTaskDetails = (categoryId) => {
+  for (const cat in predefinedTasks) {
+    const found = predefinedTasks[cat].find((task) => task.id === Number(categoryId));
+    if (found) return found;
+  }
+  return { text: "Nincs megnevezés", icon: "❓" };
+};
+
+
+
 export const Application = () => {
   const [tasks, setTasks] = useState(initialTasks);
   const [showModal, setShowModal] = useState(false);
@@ -154,14 +198,45 @@ export const Application = () => {
   const [modalError, setModalError] = useState("");
   const [nextId, setNextId] = useState(113);
 
-  const todayIndex = (new Date().getDay() + 6) % 7;
-  const weekDates = Array.from({ length: 7 }, (_, i) => getFormattedDate(i));
 
-  // Segédfüggvény: HH:MM formátum átalakítása percekre
+
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/Task/GetTasks/${storedUser.Token}`);
+      const tasksByDate = {};
+      response.data.forEach((task) => {
+        const dateStr = formatLocalDate(new Date(task.TaskDate));
+        if (!tasksByDate[dateStr]) {
+          tasksByDate[dateStr] = [];
+        }
+        const predefinedTask = getPredefinedTaskDetails(task.CategoryId);
+        tasksByDate[dateStr].push({
+          id: task.Id,
+          start: task.StartTime,
+          end: task.EndTime,
+          completed: task.Completed,
+          text: predefinedTask.text,
+          icon: predefinedTask.icon
+        });
+      });
+      setTasks(tasksByDate);
+    } catch (error) {
+      console.error("Hiba a teendők lekérésekor:", error);
+    }
+  };
+
+
+
+  const refreshTasks = async () => {
+    await fetchTasks();
+  };
+
   const timeStringToMinutes = (timeStr) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     return hours * 60 + minutes;
   };
+
+
 
   const openModal = (date) => {
     setModalDate(date);
@@ -170,10 +245,14 @@ export const Application = () => {
     setModalError("");
   };
 
+
+
   const closeModal = () => {
     setShowModal(false);
     setModalError("");
   };
+
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -182,20 +261,23 @@ export const Application = () => {
       [name]: value
     }));
     if (name === "category") {
-      // Ha kategória változik, reseteljük a teendő kiválasztást
       setNewTaskData((prev) => ({ ...prev, taskId: "" }));
     }
   };
 
-  // Ellenőrzi, hogy az új feladat időintervalluma ütközik-e egy meglévővel
+
+
   const isTimeConflict = (newStart, newEnd, existingStart, existingEnd) => {
     return newStart < existingEnd && newEnd > existingStart;
   };
 
-  const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setModalError("");
     const { category, taskId, start, end } = newTaskData;
+
     if (!category || !taskId || !start || !end) {
       setModalError("Minden mezőt ki kell tölteni!");
       return;
@@ -204,74 +286,116 @@ export const Application = () => {
       setModalError("A kezdési időnek kisebbnek kell lennie, mint a befejezési idő!");
       return;
     }
-    const newStart = timeStringToMinutes(start);
-    const newEnd = timeStringToMinutes(end);
-
-    // Ellenőrzés: ütközik-e az új időintervallum meglévő teendőkkel az adott napon
-    const dayTasks = tasks[modalDate] || [];
-    for (let task of dayTasks) {
-      const existingStart = timeStringToMinutes(task.start);
-      const existingEnd = timeStringToMinutes(task.end);
-      if (isTimeConflict(newStart, newEnd, existingStart, existingEnd)) {
-        setModalError("Ez az időpont ütközik egy másik teendővel!");
-        return;
-      }
-    }
-
-    // A kiválasztott teendő lekérése a predefinedTasks objektumból
-    const selectedTask = predefinedTasks[category].find(
-      (t) => String(t.id) === taskId
-    );
-    if (!selectedTask) {
-      setModalError("Érvénytelen teendő kiválasztva!");
+    if (!modalDate) {
+      setModalError("Hibás dátum!");
       return;
     }
 
+
+
+    let formattedTaskDate;
+    try {
+      // A modalDate dd.MM.yyyy formátumú, ezért szétbontjuk és
+      // a Date.UTC segítségével UTC időzónában hozzuk létre a dátumot.
+      const parts = modalDate.split(".");
+      if (parts.length === 3) {
+        const day = Number(parts[0]);
+        const month = Number(parts[1]);
+        const year = Number(parts[2]);
+        const utcDate = new Date(Date.UTC(year, month - 1, day));
+        formattedTaskDate = utcDate.toISOString();
+      } else {
+        formattedTaskDate = new Date(modalDate).toISOString();
+      }
+    } catch (error) {
+      setModalError("Hibás dátumformátum!");
+      return;
+    }
+
+
+
     const taskToAdd = {
-      id: nextId,
-      icon: selectedTask.icon,
-      text: selectedTask.text,
-      start,
-      end,
-      completed: false
+      Id: 0,
+      UserId: 0,
+      CategoryId: Number(taskId),
+      StartTime: start,
+      EndTime: end,
+      TaskDate: formattedTaskDate,
+      Completed: false
     };
 
-    // Új teendő hozzáadása és az adott nap teendőinek időrendi rendezése
-    setTasks((prevTasks) => {
-      const updatedDayTasks = prevTasks[modalDate]
-        ? [...prevTasks[modalDate], taskToAdd]
-        : [taskToAdd];
-      updatedDayTasks.sort((a, b) => timeStringToMinutes(a.start) - timeStringToMinutes(b.start));
-      return { ...prevTasks, [modalDate]: updatedDayTasks };
-    });
-    setNextId(nextId + 1);
-    closeModal();
+
+
+    try {
+      const response = await axios.post(`${API_URL}/Task/PostTask/${storedUser.Token}`, taskToAdd, {
+        headers: { "Content-Type": "application/json" }
+      });
+      if (response.status === 201) {
+        await refreshTasks();
+        closeModal();
+      } else {
+        setModalError("Hiba történt a feladat hozzáadásakor!");
+      }
+    } catch (error) {
+      setModalError("Hiba történt a feladat mentésekor!");
+      console.error("POST hiba:", error);
+    }
   };
+
+
+
+  const handleCompleteTask = async (taskId) => {
+    try {
+      await axios.put(`${API_URL}/Task/PutTask/${storedUser.Token}/${taskId}`, { completed: true });
+      await refreshTasks();
+    } catch (error) {
+      console.error("Hiba a feladat módosításakor:", error);
+    }
+  };
+
+
+
+  const handleDeleteTask = async (taskId) => {
+    try {
+      await axios.delete(`${API_URL}/Task/DeleteTask/${storedUser.Token}/${taskId}`);
+      await refreshTasks();
+    } catch (error) {
+      console.error("Hiba a feladat törlésekor:", error);
+    }
+  };
+
+
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+
 
   return (
     <div className="application">
-<header className="app-header">
-  <div className="user-profile">
-    <div className="avatar-section">
-      <img src="/avatar.png" alt="Profilkép" className="avatar" />
-      <div className="username">Felhasználó</div>
-    </div>
-    <div className="stats-section">
-      <div className="level">
-        <span className="level-icon">🏆</span> Szint : lvl 5
-      </div>
-      <div className="streak">
-        <span className="streak-icon">⚡</span> Streak: 10
-      </div>
-    </div>
-  </div>
-</header>
+      <header className="app-header">
+        <div className="user-profile">
+          <div className="avatar-section">
+            <img src="/avatar.png" alt="Profilkép" className="avatar" />
+            <div className="username">{storedUser.FelhasznaloNev}</div>
+          </div>
+          <div className="stats-section">
+            <div className="level">
+              <span className="level-icon">🏆</span> Szint : lvl 5
+            </div>
+            <div className="streak">
+              <span className="streak-icon">⚡</span> Streak: 10
+            </div>
+          </div>
+        </div>
+      </header>
       <div className="week-grid">
         {weekDates.map((date, index) => (
           <div key={index} className="day-column">
             <div className="day-header">
               <div className="day-info">
-                <span className="day-name">{days[(todayIndex + index) % 7]}</span>
+                <span className="day-name">{dayNames[index]}</span>
                 <span className="day-date">{date}</span>
               </div>
               <button className="add-task" onClick={() => openModal(date)}>+</button>
@@ -294,15 +418,7 @@ export const Application = () => {
                       <div className="task-actions">
                         <button
                           className={`action-btn complete-btn ${task.completed ? "completed" : ""}`}
-                          onClick={() =>
-                            setTasks((prevTasks) => {
-                              const updatedTasks = { ...prevTasks };
-                              updatedTasks[date] = updatedTasks[date].map((t) =>
-                                t.id === task.id ? { ...t, completed: !t.completed } : t
-                              );
-                              return updatedTasks;
-                            })
-                          }
+                          onClick={() => handleCompleteTask(task.id)}
                           style={{
                             fontSize: task.completed ? "36px" : "28px",
                             color: task.completed ? "#50c878" : "inherit"
@@ -310,16 +426,7 @@ export const Application = () => {
                         >
                           ✔
                         </button>
-                        <button
-                          className="action-btn remove-task"
-                          onClick={() =>
-                            setTasks((prevTasks) => {
-                              const updatedTasks = { ...prevTasks };
-                              updatedTasks[date] = updatedTasks[date].filter((t) => t.id !== task.id);
-                              return updatedTasks;
-                            })
-                          }
-                        >
+                        <button className="action-btn remove-task" onClick={() => handleDeleteTask(task.id)}>
                           ✖
                         </button>
                       </div>
@@ -329,7 +436,6 @@ export const Application = () => {
           </div>
         ))}
       </div>
-
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -373,23 +479,11 @@ export const Application = () => {
               )}
               <div className="form-group">
                 <label>Kezdés:</label>
-                <input
-                  type="time"
-                  name="start"
-                  value={newTaskData.start}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="time" name="start" value={newTaskData.start} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
                 <label>Befejezés:</label>
-                <input
-                  type="time"
-                  name="end"
-                  value={newTaskData.end}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="time" name="end" value={newTaskData.end} onChange={handleInputChange} required />
               </div>
               {modalError && <p className="modal-error">{modalError}</p>}
               <div className="modal-buttons">

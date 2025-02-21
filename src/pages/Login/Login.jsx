@@ -51,10 +51,10 @@ export const Login = () => {
 
             if (response.status === 200) {
                 const loggedUser = response.data;
-                alert(`Sikeres bejelentkezés: ${loggedUser.felhasznaloNev}`);
-                localStorage.setItem('authToken', loggedUser.Token);
-                // Átirányítás (ha szükséges)
-                // window.location.href = '/';
+
+                sessionStorage.setItem('userData', JSON.stringify(loggedUser));
+
+                window.location.href = '/application'; // Átirányítás
             } else {
                 alert('Hibás felhasználónév vagy jelszó!');
             }
