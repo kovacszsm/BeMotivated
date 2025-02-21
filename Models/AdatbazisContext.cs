@@ -30,7 +30,7 @@ public partial class AdatbazisContext : DbContext
         }
     }
 
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>(entity =>
