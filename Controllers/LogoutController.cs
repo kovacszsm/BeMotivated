@@ -8,12 +8,12 @@ namespace Backend.Controllers
     [ApiController]
     public class LogoutController : ControllerBase
     {
-        [HttpPost("uId")]
-        public IActionResult Logout(string uId)
+        [HttpPost("Logout/{token}")]
+        public IActionResult Logout(string token)
         {
-            if(Program.LoggedInUsers.ContainsKey(uId))
+            if(Program.LoggedInUsers.ContainsKey(token))
             {
-                Program.LoggedInUsers.Remove(uId);
+                Program.LoggedInUsers.Remove(token);
                 return Ok("Sikeres kijelentkezés!");
             }
             else
