@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Navigációhoz a kilépés után
 import "./Application.css";
 
 // API alap URL:
@@ -193,6 +194,9 @@ const getPredefinedTaskDetails = (categoryId) => {
 // ALKALMAZÁS KOMPONENT
 // ====================
 export const Application = () => {
+  // useNavigate hook a navigációhoz (kilépés után)
+  const navigate = useNavigate();
+
   // Állapotváltozók definiálása
   const [tasks, setTasks] = useState(initialTasks);
   const [showModal, setShowModal] = useState(false);
@@ -204,7 +208,6 @@ export const Application = () => {
     end: ""
   });
   const [modalError, setModalError] = useState("");
-  const [nextId, setNextId] = useState(113);
 
   // -----------------------------------
   // TEVÉKENYSÉGEK LEKÉRÉSE A BACKENDRŐL
@@ -403,6 +406,23 @@ export const Application = () => {
     }
   };
 
+  // ----------------------
+  // KIJELENTKEZÉS (LOGOUT)
+  // ----------------------
+  const handleLogout = async () => {
+    try {
+      // Kilépés API hívása: az URL-ben a uId helyére a token kerül, 
+      // a JSON-ban pedig a token paraméterként kerül elküldésre
+      await axios.post(`${API_URL}/Logout/Logout/${storedUser.Token}`);
+      // Töröljük a sessionStorage-ból a felhasználói adatokat
+      sessionStorage.removeItem("userData");
+      // Navigálás a főoldalra
+      navigate("/");
+    } catch (error) {
+      console.error("Hiba a kijelentkezéskor:", error);
+    }
+  };
+
   // ===============================================================
   // EFFEKTEK: TEVÉKENYSÉGEK LEKÉRÉSE A KOMPONENT INICIALIZÁLÁSÁNKOR
   // ===============================================================
@@ -423,11 +443,17 @@ export const Application = () => {
           </div>
           <div className="stats-section">
             <div className="level">
-              <span className="level-icon">🏆</span> Szint : lvl 5
+              <span className="level-icon">🏆</span> Szint : lvl x
             </div>
             <div className="streak">
-              <span className="streak-icon">⚡</span> Streak: 10
+              <span className="streak-icon">⚡</span> Streak: x
             </div>
+          </div>
+          {/* * */}
+          <div className="logout">
+            <button className="logout-button" onClick={handleLogout}>
+              🚪
+            </button>
           </div>
         </div>
       </header>
