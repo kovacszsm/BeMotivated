@@ -2,24 +2,28 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Application.css";
 
-
-
+// API alap URL:
 const API_URL = `https://localhost:7040/api`;
+
+// Felhasználó adatainak betöltése a sessionStorage-ból
 const storedUser = JSON.parse(sessionStorage.getItem("userData"));
 console.log(storedUser?.FelhasznaloNev);
 console.log(storedUser?.Token);
 
+// ===============
+// SEGÉDFÜGGVÉNYEK
+// ===============
 
-
+// Dátum formázása "ÉÉÉÉ.HH.NN" formátumban (pl. 2025.02.23)
 const formatLocalDate = (date) => {
   const year = date.getFullYear();
+  // A hónap 0-tól indul, ezért +1 és padStart a 2 jegyű megjelenítéshez
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
-  return `${day}.${month}.${year}`;
+  return `${year}.${month}.${day}`;
 };
 
-
-
+// Az elkövetkező 7 nap dátumainak tömbje
 const weekDates = (() => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, i) => {
@@ -29,23 +33,26 @@ const weekDates = (() => {
   });
 })();
 
-
-
+// Az elkövetkező 7 nap napneveinek tömbje, az első betű nagybetűs
 const dayNames = (() => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(today);
     date.setDate(today.getDate() + i);
-    return date.toLocaleDateString("hu-HU", { weekday: "long" });
+    return date
+      .toLocaleDateString("hu-HU", { weekday: "long" })
+      .replace(/^\w/, (c) => c.toUpperCase());
   });
 })();
 
+// ==========================
+// PREDEFINIÁLT TEVÉKENYSÉGEK
+// ==========================
 
-
+// Üres kezdeti teendő lista
 const initialTasks = {};
 
-
-
+// Predefiniált kategóriák és teendők ikonokkal
 const predefinedTasks = {
   "Sport & Testmozgás": [
     { id: 1, text: "Edzés", icon: "🏋️‍♂️" },
@@ -173,8 +180,7 @@ const predefinedTasks = {
   ]
 };
 
-
-
+// Segédfüggvény a predefiniált teendő részleteinek lekéréséhez a CategoryId alapján
 const getPredefinedTaskDetails = (categoryId) => {
   for (const cat in predefinedTasks) {
     const found = predefinedTasks[cat].find((task) => task.id === Number(categoryId));
@@ -183,9 +189,11 @@ const getPredefinedTaskDetails = (categoryId) => {
   return { text: "Nincs megnevezés", icon: "❓" };
 };
 
-
-
+// ====================
+// ALKALMAZÁS KOMPONENT
+// ====================
 export const Application = () => {
+  // Állapotváltozók definiálása
   const [tasks, setTasks] = useState(initialTasks);
   const [showModal, setShowModal] = useState(false);
   const [modalDate, setModalDate] = useState(null);
@@ -198,25 +206,30 @@ export const Application = () => {
   const [modalError, setModalError] = useState("");
   const [nextId, setNextId] = useState(113);
 
-
-
+  // -----------------------------------
+  // TEVÉKENYSÉGEK LEKÉRÉSE A BACKENDRŐL
+  // -----------------------------------
   const fetchTasks = async () => {
     try {
       const response = await axios.get(`${API_URL}/Task/GetTasks/${storedUser.Token}`);
       const tasksByDate = {};
       response.data.forEach((task) => {
+        // A TaskDate alapján csoportosítjuk a teendőket
         const dateStr = formatLocalDate(new Date(task.TaskDate));
         if (!tasksByDate[dateStr]) {
           tasksByDate[dateStr] = [];
         }
         const predefinedTask = getPredefinedTaskDetails(task.CategoryId);
+        // A teljes feladatobjektum mentése a kliens számára, a későbbi frissítéshez
         tasksByDate[dateStr].push({
           id: task.Id,
           start: task.StartTime,
           end: task.EndTime,
           completed: task.Completed,
           text: predefinedTask.text,
-          icon: predefinedTask.icon
+          icon: predefinedTask.icon,
+          CategoryId: task.CategoryId, // Szükséges a teljes objektum frissítéséhez
+          TaskDate: task.TaskDate   // Szükséges a teljes objektum frissítéséhez
         });
       });
       setTasks(tasksByDate);
@@ -225,19 +238,21 @@ export const Application = () => {
     }
   };
 
-
-
+  // Újratöltjük a teendőket
   const refreshTasks = async () => {
     await fetchTasks();
   };
 
+  // Időérték átváltása percekre az összehasonlítás érdekében
   const timeStringToMinutes = (timeStr) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-
-
+  // -------------------------------
+  // MODAL MEGJELENÍTÉSE ÉS KEZELÉSE
+  // -------------------------------
+  // Modal megnyitása adott dátummal
   const openModal = (date) => {
     setModalDate(date);
     setShowModal(true);
@@ -245,43 +260,44 @@ export const Application = () => {
     setModalError("");
   };
 
-
-
+  // Modal bezárása
   const closeModal = () => {
     setShowModal(false);
     setModalError("");
   };
 
-
-
+  // Modal űrlap input mezőinek kezelése
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewTaskData((prev) => ({
       ...prev,
       [name]: value
     }));
+    // Ha a kategória változik, akkor töröljük a korábbi teendőválasztást
     if (name === "category") {
       setNewTaskData((prev) => ({ ...prev, taskId: "" }));
     }
   };
 
-
-
+  // Ellenőrizzük, hogy az új időintervallum ütközik-e egy meglévővel
   const isTimeConflict = (newStart, newEnd, existingStart, existingEnd) => {
     return newStart < existingEnd && newEnd > existingStart;
   };
 
-
-
+  // -------------------------
+  // ÚJ TEVÉKENYSÉG HOZZÁADÁSA
+  // -------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setModalError("");
     const { category, taskId, start, end } = newTaskData;
 
+    // Ellenőrizzük, hogy minden mező ki van-e töltve
     if (!category || !taskId || !start || !end) {
       setModalError("Minden mezőt ki kell tölteni!");
       return;
     }
+    // Ellenőrizzük, hogy a kezdési idő kisebb legyen, mint a befejezési idő
     if (start >= end) {
       setModalError("A kezdési időnek kisebbnek kell lennie, mint a befejezési idő!");
       return;
@@ -291,17 +307,30 @@ export const Application = () => {
       return;
     }
 
+    // Ellenőrizzük, hogy az adott időintervallum ütközik-e egy létezővel
+    if (
+      tasks[modalDate] &&
+      tasks[modalDate].some((task) =>
+        isTimeConflict(
+          timeStringToMinutes(start),
+          timeStringToMinutes(end),
+          timeStringToMinutes(task.start),
+          timeStringToMinutes(task.end)
+        )
+      )
+    ) {
+      setModalError("Ez az időintervallum már foglalt!");
+      return;
+    }
 
-
+    // A dátum ISO formátumra alakítása UTC időzónában
     let formattedTaskDate;
     try {
-      // A modalDate dd.MM.yyyy formátumú, ezért szétbontjuk és
-      // a Date.UTC segítségével UTC időzónában hozzuk létre a dátumot.
       const parts = modalDate.split(".");
       if (parts.length === 3) {
-        const day = Number(parts[0]);
+        const day = Number(parts[2]);
         const month = Number(parts[1]);
-        const year = Number(parts[2]);
+        const year = Number(parts[0]);
         const utcDate = new Date(Date.UTC(year, month - 1, day));
         formattedTaskDate = utcDate.toISOString();
       } else {
@@ -312,8 +341,7 @@ export const Application = () => {
       return;
     }
 
-
-
+    // Új teendő objektum elkészítése
     const taskToAdd = {
       Id: 0,
       UserId: 0,
@@ -323,8 +351,6 @@ export const Application = () => {
       TaskDate: formattedTaskDate,
       Completed: false
     };
-
-
 
     try {
       const response = await axios.post(`${API_URL}/Task/PostTask/${storedUser.Token}`, taskToAdd, {
@@ -342,19 +368,32 @@ export const Application = () => {
     }
   };
 
+  // ----------------------------------------
+  // TEVÉKENYSÉG FRISSÍTÉSE: KITÖLTÖTTÉ TÉTEL
+  // ----------------------------------------
+  // A teljes feladatobjektumot átadjuk, és csak a Completed értéket állítjuk true-ra
+  const handleCompleteTask = async (task) => {
+    const updatedTask = {
+      Id: task.id,
+      UserId: 0, // A backend a token alapján azonosítja a felhasználót
+      CategoryId: task.CategoryId,
+      StartTime: task.start,
+      EndTime: task.end,
+      TaskDate: task.TaskDate,
+      Completed: true
+    };
 
-
-  const handleCompleteTask = async (taskId) => {
     try {
-      await axios.put(`${API_URL}/Task/PutTask/${storedUser.Token}/${taskId}`, { completed: true });
+      await axios.put(`${API_URL}/Task/PutTask/${storedUser.Token}/${task.id}`, updatedTask);
       await refreshTasks();
     } catch (error) {
       console.error("Hiba a feladat módosításakor:", error);
     }
   };
 
-
-
+  // -------------------
+  // TEVÉKENYSÉG TÖRLÉSE
+  // -------------------
   const handleDeleteTask = async (taskId) => {
     try {
       await axios.delete(`${API_URL}/Task/DeleteTask/${storedUser.Token}/${taskId}`);
@@ -364,14 +403,16 @@ export const Application = () => {
     }
   };
 
-
-
+  // ===============================================================
+  // EFFEKTEK: TEVÉKENYSÉGEK LEKÉRÉSE A KOMPONENT INICIALIZÁLÁSÁNKOR
+  // ===============================================================
   useEffect(() => {
     fetchTasks();
   }, []);
 
-
-
+  // ==========
+  // RENDERELÉS
+  // ==========
   return (
     <div className="application">
       <header className="app-header">
@@ -418,7 +459,7 @@ export const Application = () => {
                       <div className="task-actions">
                         <button
                           className={`action-btn complete-btn ${task.completed ? "completed" : ""}`}
-                          onClick={() => handleCompleteTask(task.id)}
+                          onClick={() => handleCompleteTask(task)}
                           style={{
                             fontSize: task.completed ? "36px" : "28px",
                             color: task.completed ? "#50c878" : "inherit"
