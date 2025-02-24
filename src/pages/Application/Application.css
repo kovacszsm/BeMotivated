@@ -14,35 +14,122 @@ body {
   max-width: 100vw;
 }
 
+/* ------------------- */
+/* Fejléc – app-header módosításai */
+/* ------------------- */
 .app-header {
-  width: 100%;
+  position: fixed;       /* Rögzített a lap tetejéhez */
+  top: 0;
+  left: 0;
+  width: 100%;           /* Kitölti a lap szélességét */
+  background: transparent;  /* Nincs háttérszín */
+  padding: 0;            /* Nincs belső térköz */
+  margin: 0;
   display: flex;
-  justify-content: center;
-  background-color: #150C05;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: none;   /* Nem jelenik meg alsó vonal */
+  box-shadow: none;      /* Nincs árnyék */
 }
 
-.profile {
+/* Felhasználói adatok és kilépés elrendezése */
+.user-profile {
   display: flex;
   align-items: center;
-  color: #FFFDF2;
+  justify-content: flex-start; /* Felhasználói adatok a jobb oldalon */
+  width: 100%;
+  gap: 20px;
+}
+
+/* Kilépés gomb – bal oldalon */
+.logout {
+  display: flex;
+  align-items: center;
+  order: 1;             /* A flex sorrendben a bal oldali pozícióhoz */
+  margin-left: auto;     /* Bal szélre tolja */
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #333;
+  padding: 8px;
+  transition: color 0.3s;
+}
+
+.logout-button:hover {
+  color: #dc3545;
+}
+
+/* Profilkép és felhasználónév – a felhasználónév a kép alatt, középre igazítva */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  margin-right: 15px;
-  border: 3px solid #FFFDF2;
+  object-fit: cover;
+  margin-bottom: 5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+.username {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin: 0;
+}
+
+/* Statisztikák – maradnak középen */
+.stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.level {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+.level-icon {
+  margin-right: 5px;
+  color: #ffcc00;
+}
+
+.streak {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+.streak-icon {
+  margin-right: 5px;
+  color: #ff8c00;
+}
+
+/* ------------------- */
+/* Egyéb elemek */
+/* ------------------- */
 .week-grid {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  margin-top: 30px;
+  margin-top: 80px;  /* Megnövelt margin-top, hogy a fixed header ne fedje el a tartalmat */
   gap: 10px;
 }
 
@@ -200,7 +287,9 @@ body {
   color: #dc3545;
 }
 
+/* ------------------- */
 /* Modális ablak stílusai */
+/* ------------------- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -285,7 +374,9 @@ body {
   background-color: #c82333;
 }
 
+/* ------------------- */
 /* Egyedi dropdown (select) stílus */
+/* ------------------- */
 .custom-dropdown {
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -305,77 +396,4 @@ body {
   outline: none;
   border-color: #50c878;
   box-shadow: 0 0 5px rgba(80, 200, 120, 0.5);
-}
-
-.app-header {
-  background: linear-gradient(225deg, #fff7e6, #ffe0b2);
-  padding: 10px 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  border-bottom: 1px solid #ecdcc3;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.user-profile {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.avatar-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-bottom: 5px;
-  border: 2px solid #fff;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.username {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  text-align: center;
-  margin: 0;
-}
-
-.stats-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center; 
-}
-
-.level {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
-}
-
-.level-icon {
-  margin-right: 5px;
-  color: #ffcc00;
-}
-
-.streak {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
-}
-
-.streak-icon {
-  margin-right: 5px;
-  color: #ff8c00;
 }
