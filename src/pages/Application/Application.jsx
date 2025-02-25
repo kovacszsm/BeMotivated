@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom"; // Navigációhoz a kilépés után
+import { useNavigate } from "react-router-dom";
 import "./Application.css";
 
 // API alap URL:
@@ -14,17 +14,13 @@ console.log(storedUser?.Token);
 // ===============
 // SEGÉDFÜGGVÉNYEK
 // ===============
-
-// Dátum formázása "ÉÉÉÉ.HH.NN" formátumban (pl. 2025.02.23)
 const formatLocalDate = (date) => {
   const year = date.getFullYear();
-  // A hónap 0-tól indul, ezért +1 és padStart a 2 jegyű megjelenítéshez
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
   return `${year}.${month}.${day}`;
 };
 
-// Az elkövetkező 7 nap dátumainak tömbje
 const weekDates = (() => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, i) => {
@@ -34,7 +30,6 @@ const weekDates = (() => {
   });
 })();
 
-// Az elkövetkező 7 nap napneveinek tömbje, az első betű nagybetűs
 const dayNames = (() => {
   const today = new Date();
   return Array.from({ length: 7 }, (_, i) => {
@@ -49,11 +44,8 @@ const dayNames = (() => {
 // ==========================
 // PREDEFINIÁLT TEVÉKENYSÉGEK
 // ==========================
-
-// Üres kezdeti teendő lista
 const initialTasks = {};
 
-// Predefiniált kategóriák és teendők ikonokkal
 const predefinedTasks = {
   "Sport & Testmozgás": [
     { id: 1, text: "Edzés", icon: "🏋️‍♂️" },
@@ -181,23 +173,25 @@ const predefinedTasks = {
   ]
 };
 
-// Segédfüggvény a predefiniált teendő részleteinek lekéréséhez a CategoryId alapján
 const getPredefinedTaskDetails = (categoryId) => {
   for (const cat in predefinedTasks) {
-    const found = predefinedTasks[cat].find((task) => task.id === Number(categoryId));
+    const found = predefinedTasks[cat].find(
+      (task) => task.id === Number(categoryId)
+    );
     if (found) return found;
   }
   return { text: "Nincs megnevezés", icon: "❓" };
 };
 
-// ====================
-// ALKALMAZÁS KOMPONENT
-// ====================
 export const Application = () => {
-  // useNavigate hook a navigációhoz (kilépés után)
   const navigate = useNavigate();
 
-  // Állapotváltozók definiálása
+  // Témaváltó (light/dark)
+  const [theme, setTheme] = useState("light");
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
   const [tasks, setTasks] = useState(initialTasks);
   const [showModal, setShowModal] = useState(false);
   const [modalDate, setModalDate] = useState(null);
@@ -209,21 +203,31 @@ export const Application = () => {
   });
   const [modalError, setModalError] = useState("");
 
-  // -----------------------------------
-  // TEVÉKENYSÉGEK LEKÉRÉSE A BACKENDRŐL
-  // -----------------------------------
+  // Új: Beállítások modal állapot
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  // Frissítjük a body class-t a témának megfelelően
+  useEffect(() => {
+    if (theme === "dark") {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [theme]);
+
+  // Teendők lekérése
   const fetchTasks = async () => {
     try {
-      const response = await axios.get(`${API_URL}/Task/GetTasks/${storedUser.Token}`);
+      const response = await axios.get(
+        `${API_URL}/Task/GetTasks/${storedUser.Token}`
+      );
       const tasksByDate = {};
       response.data.forEach((task) => {
-        // A TaskDate alapján csoportosítjuk a teendőket
         const dateStr = formatLocalDate(new Date(task.TaskDate));
         if (!tasksByDate[dateStr]) {
           tasksByDate[dateStr] = [];
         }
         const predefinedTask = getPredefinedTaskDetails(task.CategoryId);
-        // A teljes feladatobjektum mentése a kliens számára, a későbbi frissítéshez
         tasksByDate[dateStr].push({
           id: task.Id,
           start: task.StartTime,
@@ -231,8 +235,8 @@ export const Application = () => {
           completed: task.Completed,
           text: predefinedTask.text,
           icon: predefinedTask.icon,
-          CategoryId: task.CategoryId, // Szükséges a teljes objektum frissítéséhez
-          TaskDate: task.TaskDate   // Szükséges a teljes objektum frissítéséhez
+          CategoryId: task.CategoryId,
+          TaskDate: task.TaskDate
         });
       });
       setTasks(tasksByDate);
@@ -241,21 +245,16 @@ export const Application = () => {
     }
   };
 
-  // Újratöltjük a teendőket
   const refreshTasks = async () => {
     await fetchTasks();
   };
 
-  // Időérték átváltása percekre az összehasonlítás érdekében
   const timeStringToMinutes = (timeStr) => {
     const [hours, minutes] = timeStr.split(":").map(Number);
     return hours * 60 + minutes;
   };
 
-  // -------------------------------
-  // MODAL MEGJELENÍTÉSE ÉS KEZELÉSE
-  // -------------------------------
-  // Modal megnyitása adott dátummal
+  // Modal megnyitása
   const openModal = (date) => {
     setModalDate(date);
     setShowModal(true);
@@ -269,40 +268,48 @@ export const Application = () => {
     setModalError("");
   };
 
-  // Modal űrlap input mezőinek kezelése
+  // Beállítások modal megnyitása / bezárása
+  const openSettingsModal = () => {
+    setShowSettingsModal(true);
+  };
+  const closeSettingsModal = () => {
+    setShowSettingsModal(false);
+  };
+
+  // Input mezők kezelése
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewTaskData((prev) => ({
       ...prev,
       [name]: value
     }));
-    // Ha a kategória változik, akkor töröljük a korábbi teendőválasztást
     if (name === "category") {
       setNewTaskData((prev) => ({ ...prev, taskId: "" }));
     }
   };
 
-  // Ellenőrizzük, hogy az új időintervallum ütközik-e egy meglévővel
-  const isTimeConflict = (newStart, newEnd, existingStart, existingEnd) => {
+  const isTimeConflict = (
+    newStart,
+    newEnd,
+    existingStart,
+    existingEnd
+  ) => {
     return newStart < existingEnd && newEnd > existingStart;
   };
 
-  // -------------------------
-  // ÚJ TEVÉKENYSÉG HOZZÁADÁSA
-  // -------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setModalError("");
     const { category, taskId, start, end } = newTaskData;
 
-    // Ellenőrizzük, hogy minden mező ki van-e töltve
     if (!category || !taskId || !start || !end) {
       setModalError("Minden mezőt ki kell tölteni!");
       return;
     }
-    // Ellenőrizzük, hogy a kezdési idő kisebb legyen, mint a befejezési idő
     if (start >= end) {
-      setModalError("A kezdési időnek kisebbnek kell lennie, mint a befejezési idő!");
+      setModalError(
+        "A kezdési időnek kisebbnek kell lennie, mint a befejezési idő!"
+      );
       return;
     }
     if (!modalDate) {
@@ -310,7 +317,6 @@ export const Application = () => {
       return;
     }
 
-    // Ellenőrizzük, hogy az adott időintervallum ütközik-e egy létezővel
     if (
       tasks[modalDate] &&
       tasks[modalDate].some((task) =>
@@ -326,7 +332,6 @@ export const Application = () => {
       return;
     }
 
-    // A dátum ISO formátumra alakítása UTC időzónában
     let formattedTaskDate;
     try {
       const parts = modalDate.split(".");
@@ -344,7 +349,6 @@ export const Application = () => {
       return;
     }
 
-    // Új teendő objektum elkészítése
     const taskToAdd = {
       Id: 0,
       UserId: 0,
@@ -356,9 +360,13 @@ export const Application = () => {
     };
 
     try {
-      const response = await axios.post(`${API_URL}/Task/PostTask/${storedUser.Token}`, taskToAdd, {
-        headers: { "Content-Type": "application/json" }
-      });
+      const response = await axios.post(
+        `${API_URL}/Task/PostTask/${storedUser.Token}`,
+        taskToAdd,
+        {
+          headers: { "Content-Type": "application/json" }
+        }
+      );
       if (response.status === 201) {
         await refreshTasks();
         closeModal();
@@ -371,14 +379,10 @@ export const Application = () => {
     }
   };
 
-  // ----------------------------------------
-  // TEVÉKENYSÉG FRISSÍTÉSE: KITÖLTÖTTÉ TÉTEL
-  // ----------------------------------------
-  // A teljes feladatobjektumot átadjuk, és csak a Completed értéket állítjuk true-ra
   const handleCompleteTask = async (task) => {
     const updatedTask = {
       Id: task.id,
-      UserId: 0, // A backend a token alapján azonosítja a felhasználót
+      UserId: 0,
       CategoryId: task.CategoryId,
       StartTime: task.start,
       EndTime: task.end,
@@ -387,76 +391,146 @@ export const Application = () => {
     };
 
     try {
-      await axios.put(`${API_URL}/Task/PutTask/${storedUser.Token}/${task.id}`, updatedTask);
+      await axios.put(
+        `${API_URL}/Task/PutTask/${storedUser.Token}/${task.id}`,
+        updatedTask
+      );
       await refreshTasks();
     } catch (error) {
       console.error("Hiba a feladat módosításakor:", error);
     }
   };
 
-  // -------------------
-  // TEVÉKENYSÉG TÖRLÉSE
-  // -------------------
   const handleDeleteTask = async (taskId) => {
     try {
-      await axios.delete(`${API_URL}/Task/DeleteTask/${storedUser.Token}/${taskId}`);
+      await axios.delete(
+        `${API_URL}/Task/DeleteTask/${storedUser.Token}/${taskId}`
+      );
       await refreshTasks();
     } catch (error) {
       console.error("Hiba a feladat törlésekor:", error);
     }
   };
 
-  // ----------------------
-  // KIJELENTKEZÉS (LOGOUT)
-  // ----------------------
   const handleLogout = async () => {
     try {
-      // Kilépés API hívása: az URL-ben a uId helyére a token kerül, 
-      // a JSON-ban pedig a token paraméterként kerül elküldésre
       await axios.post(`${API_URL}/Logout/Logout/${storedUser.Token}`);
-      // Töröljük a sessionStorage-ból a felhasználói adatokat
       sessionStorage.removeItem("userData");
-      // Navigálás a főoldalra
+      document.body.classList.remove("dark-mode");
       navigate("/");
     } catch (error) {
       console.error("Hiba a kijelentkezéskor:", error);
     }
   };
 
-  // ===============================================================
-  // EFFEKTEK: TEVÉKENYSÉGEK LEKÉRÉSE A KOMPONENT INICIALIZÁLÁSÁNKOR
-  // ===============================================================
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  // ==========
-  // RENDERELÉS
-  // ==========
   return (
-    <div className="application">
+    <div className={`application ${theme === "dark" ? "dark-mode" : ""}`}>
       <header className="app-header">
         <div className="user-profile">
           <div className="avatar-section">
-            <img src="/avatar.png" alt="Profilkép" className="avatar" />
+            <img
+              src="http://images.balazska.nhely.hu/default.jpg"
+              alt="Profilkép"
+              className="avatar"
+            />
             <div className="username">{storedUser?.FelhasznaloNev}</div>
           </div>
+
+          {/* Módosított stat-szekció: LvL 10 | Streak */}
           <div className="stats-section">
-            <div className="level">
-              <span className="level-icon">🏆</span> Szint : lvl x
+            {/* Egy sorban a LvL és a Streak, '|' jellel */}
+            <div className="level-streak-row">
+              <span className="level-text">LvL 10</span>
+              <span className="streak gamified-streak">
+                10<span className="streak-icon">🔥</span>
+              </span>
             </div>
-            <div className="streak">
-              <span className="streak-icon">⚡</span> Streak: x
+
+            {/* XP sáv alatta marad */}
+            <div className="xp-bar">
+              <div className="xp-fill"></div>
             </div>
           </div>
-          {/* * */}
-          <div className="logout">
-            <button className="logout-button" onClick={handleLogout}>
-              🚪
+
+          {/* Action Buttons: Logout, Beállítások, Téma – jobbra igazítva */}
+          <div className="action-buttons">
+            <button
+              className="theme-toggle-button"
+              onClick={toggleTheme}
+              data-tooltip="Téma váltás"
+            >
+              {theme === "dark" ? (
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 4.5V2M12 22v-2.5M4.5 12H2M22 12h-2.5M5.636 5.636L4.222 4.222M19.778 19.778l-1.414-1.414M5.636 18.364l-1.414 1.414M19.778 4.222l-1.414 1.414M12 7a5 5 0 100 10 5 5 0 000-10z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </button>
+            <button
+              className="settings-button"
+              onClick={openSettingsModal}
+              data-tooltip="Beállítások"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M19.14,12.94l1.06.82a1,1,0,0,1,.26,1.34l-1,1.73a1,1,0,0,1-1.25.38l-1.24-.5a7.49,7.49,0,0,1-1.53.9l-.19,1.33a1,1,0,0,1-1,.86H10.8a1,1,0,0,1-1-.86l-.19-1.33a7.72,7.72,0,0,1-1.53-.9l-1.24.5a1,1,0,0,1-1.25-.38l-1-1.73a1,1,0,0,1,.26-1.34l1.06-.82a7.46,7.46,0,0,1,0-1.79l-1.06-.82a1,1,0,0,1-.26-1.34l1-1.73a1,1,0,0,1,1.25-.38l1.24.5a7.49,7.49,0,0,1,1.53-.9l.19-1.33a1,1,0,0,1,1-.86h2a1,1,0,0,1,1,.86l.19,1.33a7.72,7.72,0,0,1,1.53.9l1.24-.5a1,1,0,0,1,1.25.38l1,1.73a1,1,0,0,1-.26,1.34l-1.06.82a7.46,7.46,0,0,1,0,1.79ZM12,9.5A2.5,2.5,0,1,0,14.5,12,2.5,2.5,0,0,0,12,9.5Z" />
+              </svg>
+            </button>
+            <button
+              className="logout-button"
+              onClick={handleLogout}
+              data-tooltip="Kilépés"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M10 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h6v-2H5V5h5V3zm10.293 7.293-3-3-1.414 1.414L17.586 11H9v2h8.586l-2.707 2.707 1.414 1.414 3-3a1 1 0 0 0 0-1.414z" />
+              </svg>
             </button>
           </div>
         </div>
       </header>
+
       <div className="week-grid">
         {weekDates.map((date, index) => (
           <div key={index} className="day-column">
@@ -465,35 +539,64 @@ export const Application = () => {
                 <span className="day-name">{dayNames[index]}</span>
                 <span className="day-date">{date}</span>
               </div>
-              <button className="add-task" onClick={() => openModal(date)}>+</button>
+              <button className="add-task" onClick={() => openModal(date)}>
+                +
+              </button>
             </div>
             <div className="tasks">
               {tasks[date] &&
                 [...tasks[date]]
-                  .sort((a, b) => timeStringToMinutes(a.start) - timeStringToMinutes(b.start))
+                  .sort(
+                    (a, b) =>
+                      timeStringToMinutes(a.start) - timeStringToMinutes(b.start)
+                  )
                   .map((task) => (
-                    <div key={task.id} className={`task ${task.completed ? "completed" : ""}`}>
+                    <div
+                      key={task.id}
+                      className={`task ${task.completed ? "completed" : ""}`}
+                    >
                       <div className="task-info">
                         <span className="task-icon">{task.icon}</span>
-                        <span className="task-text" style={{ textDecoration: task.completed ? "line-through" : "none" }}>
+                        <span
+                          className="task-text"
+                          style={{
+                            textDecoration: task.completed
+                              ? "line-through"
+                              : "none"
+                          }}
+                        >
                           {task.text}
                         </span>
                       </div>
-                      <div className="task-time" style={{ textDecoration: task.completed ? "line-through" : "none" }}>
+                      <div
+                        className="task-time"
+                        style={{
+                          textDecoration: task.completed
+                            ? "line-through"
+                            : "none"
+                        }}
+                      >
                         {task.start} - {task.end}
                       </div>
                       <div className="task-actions">
                         <button
-                          className={`action-btn complete-btn ${task.completed ? "completed" : ""}`}
+                          className={`action-btn complete-btn ${
+                            task.completed ? "completed" : ""
+                          }`}
                           onClick={() => handleCompleteTask(task)}
                           style={{
                             fontSize: task.completed ? "36px" : "28px",
-                            color: task.completed ? "#50c878" : "inherit"
+                            color: task.completed
+                              ? "var(--accent-color)"
+                              : "inherit"
                           }}
                         >
                           ✔
                         </button>
-                        <button className="action-btn remove-task" onClick={() => handleDeleteTask(task.id)}>
+                        <button
+                          className="action-btn remove-task"
+                          onClick={() => handleDeleteTask(task.id)}
+                        >
                           ✖
                         </button>
                       </div>
@@ -503,6 +606,8 @@ export const Application = () => {
           </div>
         ))}
       </div>
+
+      {/* Új teendő hozzáadása modál */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -546,18 +651,50 @@ export const Application = () => {
               )}
               <div className="form-group">
                 <label>Kezdés:</label>
-                <input type="time" name="start" value={newTaskData.start} onChange={handleInputChange} required />
+                <input
+                  type="time"
+                  name="start"
+                  value={newTaskData.start}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Befejezés:</label>
-                <input type="time" name="end" value={newTaskData.end} onChange={handleInputChange} required />
+                <input
+                  type="time"
+                  name="end"
+                  value={newTaskData.end}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
               {modalError && <p className="modal-error">{modalError}</p>}
               <div className="modal-buttons">
                 <button type="submit">Hozzáadás</button>
-                <button type="button" onClick={closeModal}>Mégse</button>
+                <button type="button" onClick={closeModal}>
+                  Mégse
+                </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Beállítások modál */}
+      {showSettingsModal && (
+        <div className="modal-overlay">
+          <div className="modal-content settings-modal-content">
+            <h2>Beállítások</h2>
+
+            <div className="settings-options">
+              {/* Ide jöhetnek a beállítási opciók */}
+            </div>
+            <div className="modal-buttons">
+              <button type="button" onClick={closeSettingsModal}>
+                Bezár
+              </button>
+            </div>
           </div>
         </div>
       )}

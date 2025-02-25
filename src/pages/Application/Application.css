@@ -1,5 +1,75 @@
+/* ========================= */
+/* CSS Változók - alap (light) */
+/* ========================= */
+:root {
+  --bg-gradient: linear-gradient(135deg, #fafafa 0%, #eaeaea 100%);
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  --text-color: #222;
+  --icon-color: #222;
+
+  --accent-color: #4caf50;
+  --accent-hover: #43a047;
+
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-hover-bg: #fff;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --card-hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+
+  --modal-bg: #fff;
+  --modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  --dropdown-bg: #fff;
+  --dropdown-border: #ddd;
+
+  --button-bg: #4caf50;
+  --button-hover-bg: #43a047;
+  --cancel-button-bg: #4caf50;
+  --cancel-button-hover-bg: #43a047;
+}
+
+/* ========================= */
+/* Dark Mode - felülírások */
+/* ========================= */
+.dark-mode {
+  --bg-gradient: linear-gradient(135deg, #121212 0%, #0e0e0e 100%);
+  --header-bg: rgba(20, 20, 20, 0.95);
+  --header-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+
+  --text-color: #e0e0e0;
+  --icon-color: #e0e0e0;
+
+  --accent-color: #4caf50;
+  --accent-hover: #43a047;
+
+  --card-bg: #1c1c1c;
+  --card-hover-bg: #2a2a2a;
+  --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+  --card-hover-shadow: 0 10px 15px rgba(0, 0, 0, 0.9);
+
+  --modal-bg: #1c1c1c;
+  --modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.9);
+
+  --dropdown-bg: #2a2a2a;
+  --dropdown-border: #555;
+
+  --button-bg: #4caf50;
+  --button-hover-bg: #43a047;
+  --cancel-button-bg: #333;
+  --cancel-button-hover-bg: #555;
+}
+
+.dark-mode .theme-toggle-button,
+.dark-mode .logout-button,
+.dark-mode .settings-button {
+  color: #fff; /* ikonok színe */
+}
+
+/* Alap beállítások */
 body {
-  background-color: #FEFAE0;
+  background: var(--bg-gradient);
+  color: var(--text-color);
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
@@ -12,58 +82,125 @@ body {
   align-items: center;
   padding: 20px;
   max-width: 100vw;
+  background: var(--bg-gradient);
 }
 
 /* ------------------- */
-/* Fejléc – app-header módosításai */
+/* Fejléc – app-header */
 /* ------------------- */
 .app-header {
-  position: fixed;       /* Rögzített a lap tetejéhez */
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100%;           /* Kitölti a lap szélességét */
-  background: transparent;  /* Nincs háttérszín */
-  padding: 0;            /* Nincs belső térköz */
+  width: 100%;
+  background: var(--header-bg);
+  backdrop-filter: blur(8px);
+  padding: 0;
   margin: 0;
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  border-bottom: none;   /* Nem jelenik meg alsó vonal */
-  box-shadow: none;      /* Nincs árnyék */
+  box-shadow: var(--header-shadow);
+  z-index: 999;
+  border-bottom: none;
 }
 
-/* Felhasználói adatok és kilépés elrendezése */
 .user-profile {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Felhasználói adatok a jobb oldalon */
+  justify-content: flex-start;
   width: 100%;
   gap: 20px;
+  padding: 10px 20px;
 }
 
-/* Kilépés gomb – bal oldalon */
-.logout {
+/* ------------------------------ */
+/* Action Buttons (kilépés, beállítások, téma) */
+/* ------------------------------ */
+.action-buttons {
   display: flex;
   align-items: center;
-  order: 1;             /* A flex sorrendben a bal oldali pozícióhoz */
-  margin-left: auto;     /* Bal szélre tolja */
+  gap: 12px;
+  margin-left: auto;
+  position: relative;
 }
 
-.logout-button {
+.theme-toggle-button,
+.logout-button,
+.settings-button {
   background: none;
   border: none;
-  font-size: 28px;
   cursor: pointer;
-  color: #333;
   padding: 8px;
-  transition: color 0.3s;
+  transition: transform 0.2s, color 0.3s, background-color 0.3s;
+  border-radius: 4px;
+  position: relative;
 }
 
-.logout-button:hover {
-  color: #dc3545;
+.theme-toggle-button:hover,
+.logout-button:hover,
+.settings-button:hover {
+  transform: scale(1.1);
 }
 
-/* Profilkép és felhasználónév – a felhasználónév a kép alatt, középre igazítva */
+/* Tooltip doboz és nyíl alapállapot (láthatatlan) */
+.theme-toggle-button::after,
+.logout-button::after,
+.settings-button::after,
+.theme-toggle-button::before,
+.logout-button::before,
+.settings-button::before {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Tooltip doboz */
+.theme-toggle-button::after,
+.logout-button::after,
+.settings-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px); /* A gomb alá kerül */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--accent-color);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* Tooltip kis nyíl */
+.theme-toggle-button::before,
+.logout-button::before,
+.settings-button::before {
+  content: "";
+  position: absolute;
+  top: 100%; /* közvetlenül a gomb alatt */
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--accent-color);
+  z-index: 10;
+}
+
+/* Hover esetén jelenjen meg */
+.theme-toggle-button:hover::after,
+.logout-button:hover::after,
+.settings-button:hover::after,
+.theme-toggle-button:hover::before,
+.logout-button:hover::before,
+.settings-button:hover::before {
+  opacity: 1;
+}
+
+/* ------------------- */
+/* Avatar és profil adatok */
+/* ------------------- */
 .avatar-section {
   display: flex;
   flex-direction: column;
@@ -83,71 +220,99 @@ body {
 .username {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-color);
   text-align: center;
   margin: 0;
 }
 
-/* Statisztikák – maradnak középen */
+/* ------------------- */
+/* Szint és Streak – gamified */
+/* ------------------- */
 .stats-section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: center;
+  gap: 1px;
 }
 
-.level {
+/* Egy sorban: LvL 10 | Streak */
+.level-streak-row {
   display: flex;
   align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
+  gap: 27px;
 }
 
-.level-icon {
-  margin-right: 5px;
-  color: #ffcc00;
+/* Streak animáció */
+.gamified-streak {
+  animation: pulse 1.5s infinite alternate;
 }
 
-.streak {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 500;
-  color: #555;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    color: var(--text-color);
+  }
+  100% {
+    transform: scale(1.1);
+    color: #ffcc00;
+  }
 }
 
 .streak-icon {
-  margin-right: 5px;
+  margin-left: 3px;
   color: #ff8c00;
 }
 
+.level-text {
+  font-weight: bold;
+}
+
+/* Egyszerű XP sáv */
+.xp-bar {
+  width: 120px;
+  height: 6px;
+  background-color: rgb(218, 218, 208);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  /* Példa: fix 40% (vagy tetszés szerint) */
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff6a00);
+  transition: width 0.5s ease-in-out;
+}
+
 /* ------------------- */
-/* Egyéb elemek */
+/* Hét napos rács */
 /* ------------------- */
 .week-grid {
   display: flex;
   justify-content: space-evenly;
   width: 100%;
-  margin-top: 80px;  /* Megnövelt margin-top, hogy a fixed header ne fedje el a tartalmat */
+  margin-top: 110px;
   gap: 10px;
+  padding: 0 10px;
 }
 
 .day-column {
-  background-color: #29190B;
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
   padding: 15px;
   border-radius: 15px;
-  color: #FFFDF2;
+  color: var(--text-color);
   flex: 1;
   max-width: calc(100% / 7 - 20px);
   text-align: center;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
   min-width: 120px;
 }
 
 .day-column:hover {
-  transform: scale(1.05);
+  transform: translateY(-3px);
+  box-shadow: var(--card-hover-shadow);
 }
 
 .day-header {
@@ -167,29 +332,31 @@ body {
 }
 
 .day-name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 3px;
+  margin-bottom: 2px;
+  color: var(--text-color);
 }
 
 .day-date {
   font-size: 14px;
-  color: #FFD700;
+  color: #999;
 }
 
 .add-task {
-  background-color: #FFFDF2;
+  background-color: var(--accent-color);
   border: none;
-  padding: 10px;
+  padding: 8px 12px;
   font-size: 20px;
   cursor: pointer;
   border-radius: 8px;
   transition: background 0.3s, transform 0.2s;
+  color: #fff;
 }
 
 .add-task:hover {
-  background-color: #E5D7B2;
-  transform: scale(1.15);
+  background-color: var(--accent-hover);
+  transform: scale(1.1);
 }
 
 .tasks {
@@ -199,31 +366,41 @@ body {
   overflow-y: visible;
 }
 
+/* ------------------- */
+/* Task kártyák */
+/* ------------------- */
 .task {
-  background-color: #3E2C20;
-  padding: 15px;
+  background-color: var(--card-bg);
+  backdrop-filter: blur(6px);
+  padding: 12px;
   border-radius: 12px;
   font-size: 16px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  transition: background 0.3s;
+  box-shadow: var(--card-shadow);
+  transition: background 0.3s, transform 0.1s;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
   position: relative;
+  color: var(--text-color);
 }
 
 .task:hover {
-  background-color: #5C4033;
+  background-color: var(--card-hover-bg);
+  transform: scale(1.02);
+}
+
+.task.completed {
+  opacity: 0.8;
 }
 
 .task-time {
   font-size: 14px;
-  font-weight: bold;
-  color: #FFD700;
-  background-color: rgba(255, 215, 0, 0.2);
-  padding: 6px 10px;
+  font-weight: 600;
+  color: var(--accent-color);
+  background-color: rgba(76, 175, 80, 0.1);
+  padding: 4px 8px;
   border-radius: 6px;
   margin: 8px 0;
 }
@@ -264,31 +441,15 @@ body {
   background: none;
   cursor: pointer;
   transition: transform 0.2s, color 0.3s;
-  color: #FFFDF2;
+  color: var(--icon-color);
 }
 
 .action-btn:hover {
   transform: scale(1.3);
 }
 
-.complete-btn {
-  color: #FFD700;
-}
-
-.complete-btn:hover {
-  color: #28a745;
-}
-
-.remove-task {
-  color: #FFD700;
-}
-
-.remove-task:hover {
-  color: #dc3545;
-}
-
 /* ------------------- */
-/* Modális ablak stílusai */
+/* Modális ablak */
 /* ------------------- */
 .modal-overlay {
   position: fixed;
@@ -304,17 +465,39 @@ body {
 }
 
 .modal-content {
-  background: #FFFDF2;
+  background: var(--modal-bg);
   padding: 20px;
   border-radius: 12px;
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 450px;
+  box-shadow: var(--modal-shadow);
+  position: relative;
+}
+
+.settings-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: left;
+  min-height: 200px;
+}
+
+.settings-modal-content h2 {
+  font-size: 22px;
+  margin: 0;
+  text-align: center;
+}
+
+.settings-options {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
 }
 
 .modal-content h2 {
   margin-top: 0;
   text-align: center;
+  color: var(--text-color);
 }
 
 .form-group {
@@ -326,19 +509,23 @@ body {
 .form-group label {
   margin-bottom: 4px;
   font-weight: bold;
+  color: var(--text-color);
 }
 
 .form-group input,
 .form-group select {
-  padding: 6px;
+  padding: 8px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--dropdown-border);
+  background-color: var(--dropdown-bg);
+  color: var(--text-color);
 }
 
 .modal-error {
   color: #dc3545;
   font-weight: bold;
   margin-top: 5px;
+  text-align: center;
 }
 
 .modal-buttons {
@@ -357,35 +544,36 @@ body {
 }
 
 .modal-buttons button[type="submit"] {
-  background-color: #28a745;
-  color: #FFFDF2;
+  background-color: var(--button-bg);
+  color: #fff;
 }
 
 .modal-buttons button[type="submit"]:hover {
-  background-color: #218838;
+  background-color: var(--button-hover-bg);
 }
 
 .modal-buttons button[type="button"] {
-  background-color: #dc3545;
-  color: #FFFDF2;
+  background-color: var(--cancel-button-bg);
+  color: #fff;
 }
 
 .modal-buttons button[type="button"]:hover {
-  background-color: #c82333;
+  background-color: var(--cancel-button-hover-bg);
 }
 
 /* ------------------- */
-/* Egyedi dropdown (select) stílus */
+/* Egyedi dropdown (select) */
 /* ------------------- */
 .custom-dropdown {
   padding: 8px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--dropdown-border);
   border-radius: 4px;
-  background-color: #fff;
+  background-color: var(--dropdown-bg);
+  color: var(--text-color);
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width='10'%20height='10'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon%20points='0,0%205,5%2010,0'%20style='fill:%23000;'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width='10'%20height='10'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpolygon%20points='0,0%205,5%2010,0'%20style='fill:%23ccc;'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 10px center;
   background-size: 10px;
@@ -394,6 +582,6 @@ body {
 
 .custom-dropdown:focus {
   outline: none;
-  border-color: #50c878;
-  box-shadow: 0 0 5px rgba(80, 200, 120, 0.5);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 5px rgba(67, 160, 71, 0.5);
 }
