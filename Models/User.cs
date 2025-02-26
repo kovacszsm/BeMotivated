@@ -24,4 +24,6 @@ public partial class User
     public int Streak { get; set; }
 
     public int Xp { get; set; }
+
+    public string Profilkep { get; set; }
 }

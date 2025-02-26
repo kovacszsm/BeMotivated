@@ -56,7 +56,8 @@ namespace Backend.Controllers
                             Jogosultsag = loggedUser.Jogosultsag,
                             Token = token,
                             Xp = loggedUser.Xp,
-                            Streak = loggedUser.Streak
+                            Streak = loggedUser.Streak,
+                            Profilkep = loggedUser.Profilkep
                         });
                     }
                     else

@@ -13,5 +13,7 @@
         public int Xp { get; set; }
 
         public int Streak { get; set; }
+
+        public string Profilkep { get; set; }
     }
 }

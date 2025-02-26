@@ -17,20 +17,57 @@ namespace Backend.Controllers
 
 
 
-        [HttpPost]
-        public async Task<IActionResult> FileUploadFtp()
+        [HttpPost("FileUploadFtp/{token}")]
+        public async Task<IActionResult> FileUploadFtp(string token)
         {
             try
             {
+                // Token ellenőrzése
+                if (!Program.LoggedInUsers.ContainsKey(token))
+                    return Unauthorized("Érvénytelen token!");
+
+                var user = Program.LoggedInUsers[token];
+                string userName = user.FelhasznaloNev; // Feltételezzük, hogy ez a tulajdonság tartalmazza a felhasználó nevét.
+
                 var httpRequest = Request.Form;
                 var postedFile = httpRequest.Files[0];
-                string fileName = postedFile.FileName;
-                string subfolder = "/";
+
+                // Az eredeti fájlnév helyett a felhasználónevet használjuk, megtartva az eredeti kiterjesztést
+                string extension = Path.GetExtension(postedFile.FileName);
+                string fileName = $"{userName}{extension}";
+
+                // A fájl a felhasználó saját mappájába kerül mentésre
+                string subfolder = "/" + userName + "/";
                 var filePath = "ftp://ftp.nethely.hu" + subfolder + fileName;
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(filePath);
-                request.Credentials = new NetworkCredential("kovacszs", "IOlka3491oVCx");
-                request.Method = WebRequestMethods.Ftp.UploadFile;
-                await using (var ftpStream = request.GetRequestStream())
+
+                // Ellenőrizzük, hogy a fájl létezik-e, ha igen, töröljük
+                FtpWebRequest checkRequest = (FtpWebRequest)WebRequest.Create(filePath);
+                checkRequest.Credentials = new NetworkCredential("kovacszs", "IOlka3491oVCx");
+                checkRequest.Method = WebRequestMethods.Ftp.GetDateTimestamp;
+                try
+                {
+                    using (FtpWebResponse response = (FtpWebResponse)checkRequest.GetResponse())
+                    {
+                        // Fájl létezik: töröljük
+                        FtpWebRequest deleteRequest = (FtpWebRequest)WebRequest.Create(filePath);
+                        deleteRequest.Credentials = new NetworkCredential("kovacszs", "IOlka3491oVCx");
+                        deleteRequest.Method = WebRequestMethods.Ftp.DeleteFile;
+                        using (FtpWebResponse deleteResponse = (FtpWebResponse)deleteRequest.GetResponse())
+                        {
+                            // Törlés sikeres
+                        }
+                    }
+                }
+                catch (WebException)
+                {
+                    // Ha a fájl nem létezik, folytatjuk az upload-t.
+                }
+
+                // Fájl feltöltése
+                FtpWebRequest uploadRequest = (FtpWebRequest)WebRequest.Create(filePath);
+                uploadRequest.Credentials = new NetworkCredential("kovacszs", "IOlka3491oVCx");
+                uploadRequest.Method = WebRequestMethods.Ftp.UploadFile;
+                await using (var ftpStream = uploadRequest.GetRequestStream())
                 {
                     postedFile.CopyTo(ftpStream);
                 }
@@ -41,5 +78,7 @@ namespace Backend.Controllers
                 return Ok("default.jpg");
             }
         }
+
+
     }
 }
