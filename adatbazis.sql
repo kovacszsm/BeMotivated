@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Feb 21. 10:13
+-- Létrehozás ideje: 2025. Feb 26. 11:22
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -42,18 +42,13 @@ CREATE TABLE `tasks` (
 --
 
 INSERT INTO `tasks` (`Id`, `UserId`, `CategoryId`, `StartTime`, `EndTime`, `TaskDate`, `Completed`) VALUES
-(8, 1, 13, '11:11', '13:13', '2025-02-20', 0),
-(9, 1, 13, '15:13', '16:16', '2025-02-20', 0),
-(10, 1, 65, '11:11', '12:12', '2025-02-21', 0),
-(11, 1, 79, '10:10', '10:40', '2025-02-20', 0),
-(12, 1, 79, '11:11', '11:12', '2025-02-21', 0),
-(13, 1, 14, '10:10', '10:50', '2025-02-22', 0),
-(14, 1, 107, '10:01', '10:09', '2025-02-22', 0),
-(16, 1, 41, '15:25', '16:00', '2025-02-20', 0),
-(17, 1, 13, '11:01', '12:12', '2025-02-21', 0),
-(19, 1, 10, '11:11', '12:12', '2025-02-22', 0),
-(20, 1, 14, '15:11', '16:10', '2025-02-21', 0),
-(21, 1, 2, '10:10', '10:20', '2025-02-23', 0);
+(33, 1, 85, '10:10', '10:20', '2025-02-24', 1),
+(34, 2, 53, '07:15', '14:20', '2025-02-24', 1),
+(35, 2, 53, '07:15', '15:15', '2025-02-25', 0),
+(44, 1, 11, '10:01', '10:30', '2025-02-25', 1),
+(45, 1, 43, '12:01', '12:02', '2025-02-25', 1),
+(59, 1, 53, '07:15', '11:30', '2025-02-26', 1),
+(60, 1, 1, '12:00', '13:30', '2025-02-26', 0);
 
 -- --------------------------------------------------------
 
@@ -69,15 +64,19 @@ CREATE TABLE `user` (
   `Email` varchar(255) NOT NULL,
   `Jogosultsag` int(11) NOT NULL DEFAULT 0,
   `Aktiv` int(11) NOT NULL DEFAULT 1,
-  `RegisztracioDatuma` datetime NOT NULL DEFAULT current_timestamp()
+  `RegisztracioDatuma` datetime NOT NULL DEFAULT current_timestamp(),
+  `streak` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `xp` int(11) UNSIGNED NOT NULL DEFAULT 0,
+  `Profilkep` varchar(255) NOT NULL DEFAULT 'default.jpg'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- A tábla adatainak kiíratása `user`
 --
 
-INSERT INTO `user` (`Id`, `FelhasznaloNev`, `Salt`, `Hash`, `Email`, `Jogosultsag`, `Aktiv`, `RegisztracioDatuma`) VALUES
-(1, 'Zsoltyx', 'FroHWi3lu1uGpWUS', '90d25ef9eb6e9237f6ca8126b34e1dd9d1fd6a21ed315f7bac0d4b9e7480194c', 'kovacszs@kkszki.hu', 0, 1, '2025-02-21 09:00:28');
+INSERT INTO `user` (`Id`, `FelhasznaloNev`, `Salt`, `Hash`, `Email`, `Jogosultsag`, `Aktiv`, `RegisztracioDatuma`, `streak`, `xp`, `Profilkep`) VALUES
+(1, 'Zsoltyx', 'FroHWi3lu1uGpWUS', '90d25ef9eb6e9237f6ca8126b34e1dd9d1fd6a21ed315f7bac0d4b9e7480194c', 'kovacszs@kkszki.hu', 0, 1, '2025-02-21 09:00:28', 0, 120, 'default.jpg'),
+(2, 'Mark', 'PA4dvxwdpWkDOEs3', '60e731ff40963bf66f36e9b196cd26f379d5528c08dab9922a7dd19d25c1c996', 'tothm@kkszki.hu', 0, 1, '2025-02-24 08:57:49', 0, 0, 'default.jpg');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -106,13 +105,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT a táblához `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `Id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `Id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT a táblához `user`
 --
 ALTER TABLE `user`
-  MODIFY `Id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Megkötések a kiírt táblákhoz
