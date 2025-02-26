@@ -192,6 +192,28 @@ export const Application = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  const [selectedAvatar, setSelectedAvatar] = useState(
+    storedUser?.Avatar || "http://images.balazska.nhely.hu/default.jpg"
+  );
+  const [tempAvatar, setTempAvatar] = useState(selectedAvatar);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setTempAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+  const handleSettingsSave = () => {
+    setSelectedAvatar(tempAvatar);
+    // Opcionálisan elmentheted a képet a backendre vagy sessionStorage-be itt.
+    closeSettingsModal();
+  };
+
   const [tasks, setTasks] = useState(initialTasks);
   const [showModal, setShowModal] = useState(false);
   const [modalDate, setModalDate] = useState(null);
@@ -433,7 +455,7 @@ export const Application = () => {
         <div className="user-profile">
           <div className="avatar-section">
             <img
-              src="http://images.balazska.nhely.hu/default.jpg"
+              src={selectedAvatar}
               alt="Profilkép"
               className="avatar"
             />
@@ -456,10 +478,10 @@ export const Application = () => {
             </div>
           </div>
           <div className="left-menu">
-        <button className="nav-button">Kihívások</button>
-        <button className="nav-button">Statisztika</button>
-        <button className="nav-button">Függőségek</button>
-      </div>
+            <button className="nav-button">Kihívások</button>
+            <button className="nav-button">Statisztika</button>
+            <button className="nav-button">Függőségek</button>
+          </div>
 
           {/* Action Buttons: Logout, Beállítások, Téma – jobbra igazítva */}
           <div className="action-buttons">
@@ -534,7 +556,7 @@ export const Application = () => {
             </button>
           </div>
         </div>
-        
+
       </header>
 
       <div className="week-grid">
@@ -586,9 +608,8 @@ export const Application = () => {
                       </div>
                       <div className="task-actions">
                         <button
-                          className={`action-btn complete-btn ${
-                            task.completed ? "completed" : ""
-                          }`}
+                          className={`action-btn complete-btn ${task.completed ? "completed" : ""
+                            }`}
                           onClick={() => handleCompleteTask(task)}
                           style={{
                             fontSize: task.completed ? "36px" : "28px",
@@ -691,14 +712,23 @@ export const Application = () => {
       {showSettingsModal && (
         <div className="modal-overlay">
           <div className="modal-content settings-modal-content">
+            <button className="close-settings-button" onClick={closeSettingsModal}>
+              ×
+            </button>
             <h2>Beállítások</h2>
-
             <div className="settings-options">
-              {/* Ide jöhetnek a beállítási opciók */}
+              <div className="profile-pic-upload">
+                <h3>Profilkép feltöltése</h3>
+                <div className="profile-pic-preview">
+                  <img src={tempAvatar} alt="Profilkép előnézet" />
+                </div>
+                <input type="file" accept="image/*" onChange={handleFileChange} />
+              </div>
+              {/* További beállítási opciók igény szerint */}
             </div>
-            <div className="modal-buttons">
-              <button type="button" onClick={closeSettingsModal}>
-                Bezár
+            <div className="modal-buttons settings-modal-buttons">
+              <button type="button" onClick={handleSettingsSave}>
+                Mentés
               </button>
             </div>
           </div>
