@@ -54,7 +54,9 @@ namespace Backend.Controllers
                             FelhasznaloNev = loginDTO.LoginName,
                             Email = loggedUser.Email,
                             Jogosultsag = loggedUser.Jogosultsag,
-                            Token = token
+                            Token = token,
+                            Xp = loggedUser.Xp,
+                            Streak = loggedUser.Streak
                         });
                     }
                     else

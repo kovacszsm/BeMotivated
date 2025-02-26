@@ -20,4 +20,8 @@ public partial class User
     public int Aktiv { get; set; }
 
     public DateTime RegisztracioDatuma { get; set; }
+
+    public int Streak { get; set; }
+
+    public int Xp { get; set; }
 }
