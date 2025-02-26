@@ -161,7 +161,7 @@ body {
 .settings-button::after {
   content: attr(data-tooltip);
   position: absolute;
-  top: calc(100% + 8px); /* A gomb alá kerül */
+  top: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--accent-color);
@@ -179,7 +179,7 @@ body {
 .settings-button::before {
   content: "";
   position: absolute;
-  top: 100%; /* közvetlenül a gomb alatt */
+  top: 100%;
   left: 50%;
   transform: translateX(-50%);
   border-left: 6px solid transparent;
@@ -235,14 +235,12 @@ body {
   gap: 1px;
 }
 
-/* Egy sorban: LvL 10 | Streak */
 .level-streak-row {
   display: flex;
   align-items: center;
   gap: 27px;
 }
 
-/* Streak animáció */
 .gamified-streak {
   animation: pulse 1.5s infinite alternate;
 }
@@ -277,8 +275,6 @@ body {
 }
 
 .xp-fill {
-  /* Példa: fix 40% (vagy tetszés szerint) */
-  width: 40%;
   height: 100%;
   background: linear-gradient(90deg, #ffcc00, #ff6a00);
   transition: width 0.5s ease-in-out;
@@ -569,24 +565,22 @@ body {
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* balra a user-profile, jobbra a .left-menu */
+  justify-content: space-between;
   width: 100%;
 }
 
-/* A user-profile marad bal oldalon */
 .header-container .user-profile {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-left: 20px;  /* ha szeretnél kis beljebb tolást */
+  margin-left: 20px;
 }
 
-/* A gombok konténere a jobb oldalon */
 .left-menu {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-right: 20px; /* jobbra tolva */
+  margin-right: 20px;
 }
 
 .nav-button {
@@ -631,7 +625,6 @@ body {
   color: var(--text-color);
 }
 
-/* Profilkép feltöltés modern keret */
 .profile-pic-upload {
   border: 2px dashed var(--accent-color);
   border-radius: 16px;
@@ -677,13 +670,11 @@ body {
   border: 3px solid var(--card-bg);
 }
 
-/* Beállítások modal gombok */
 .settings-modal-buttons {
   display: flex;
   justify-content: flex-end;
 }
 
-/* "×" bezáró gomb a modal jobb felső sarkában */
 .close-settings-button {
   position: absolute;
   top: 15px;

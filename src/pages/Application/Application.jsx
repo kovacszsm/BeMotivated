@@ -192,14 +192,18 @@ export const Application = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+  // Profilkép állapotainak kezelése
   const [selectedAvatar, setSelectedAvatar] = useState(
-    storedUser?.Avatar || "http://images.balazska.nhely.hu/default.jpg"
+    storedUser?.Avatar || "http://images.vizsgaremekkzsm.nhely.hu/default.jpg"
   );
   const [tempAvatar, setTempAvatar] = useState(selectedAvatar);
+  // Tároljuk a feltöltendő file objektumát
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setTempAvatar(reader.result);
@@ -207,10 +211,28 @@ export const Application = () => {
       reader.readAsDataURL(file);
     }
   };
-  
-  const handleSettingsSave = () => {
-    setSelectedAvatar(tempAvatar);
-    // Opcionálisan elmentheted a képet a backendre vagy sessionStorage-be itt.
+
+  // A beállítások mentésekor feltöltjük a képet a backend-re POST hívással, majd lekérjük a legfrissebb profilképet GET hívással
+  const handleSettingsSave = async () => {
+    try {
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        // POST feltöltés a profilképhez
+        await axios.post(
+          `${API_URL}/ProfileImageUpload/FileUploadFtp/${storedUser.Token}`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+        // A feltöltés után lekérjük a legfrissebb profilképet
+        const response = await axios.get(
+          `${API_URL}/GetProfileImage/GetProfileImage/${storedUser.Token}`
+        );
+        setSelectedAvatar(response.data.profilkep);
+      }
+    } catch (error) {
+      console.error("Hiba a profilkép feltöltésekor:", error);
+    }
     closeSettingsModal();
   };
 
@@ -228,6 +250,15 @@ export const Application = () => {
   // Új: Beállítások modal állapot
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
+  // Új: XP és Streak állapotok (Level API adatai)
+  const [xp, setXp] = useState(0);
+  const [streak, setStreak] = useState(0);
+
+  // A felhasználó szintje a xp alapján (1 szint = 100xp)
+  const level = Math.floor(xp / 100) + 1;
+  // Az xp sáv kitöltése: a jelenlegi level-en belüli xp százalékos aránya
+  const xpFillWidth = `${((xp % 100) / 100) * 100}%`;
+
   // Frissítjük a body class-t a témának megfelelően
   useEffect(() => {
     if (theme === "dark") {
@@ -236,6 +267,21 @@ export const Application = () => {
       document.body.classList.remove("dark-mode");
     }
   }, [theme]);
+
+  // Profilkép lekérése bejelentkezéskor és a komponens betöltésekor
+  useEffect(() => {
+    const fetchProfileImage = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}/GetProfileImage/GetProfileImage/${storedUser.Token}`
+        );
+        setSelectedAvatar(response.data.profilkep);
+      } catch (error) {
+        console.error("Hiba a profilkép lekérésekor:", error);
+      }
+    };
+    fetchProfileImage();
+  }, []);
 
   // Teendők lekérése
   const fetchTasks = async () => {
@@ -271,9 +317,17 @@ export const Application = () => {
     await fetchTasks();
   };
 
-  const timeStringToMinutes = (timeStr) => {
-    const [hours, minutes] = timeStr.split(":").map(Number);
-    return hours * 60 + minutes;
+  // Új: Level adatok lekérése a backend API-ból
+  const fetchLevelData = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/Level/get/${storedUser.Token}`
+      );
+      setXp(response.data.xp);
+      setStreak(response.data.streak);
+    } catch (error) {
+      console.error("Hiba a szint adatok lekérésekor:", error);
+    }
   };
 
   // Modal megnyitása
@@ -310,13 +364,9 @@ export const Application = () => {
     }
   };
 
-  const isTimeConflict = (
-    newStart,
-    newEnd,
-    existingStart,
-    existingEnd
-  ) => {
-    return newStart < existingEnd && newEnd > existingStart;
+  const timeStringToMinutes = (timeStr) => {
+    const [hours, minutes] = timeStr.split(":").map(Number);
+    return hours * 60 + minutes;
   };
 
   const handleSubmit = async (e) => {
@@ -401,6 +451,11 @@ export const Application = () => {
     }
   };
 
+  // Ellenőrzi az időütközést két időpont között
+  const isTimeConflict = (newStart, newEnd, existingStart, existingEnd) => {
+    return newStart < existingEnd && newEnd > existingStart;
+  };
+
   const handleCompleteTask = async (task) => {
     const updatedTask = {
       Id: task.id,
@@ -413,11 +468,20 @@ export const Application = () => {
     };
 
     try {
+      // Feladat státuszának frissítése
       await axios.put(
         `${API_URL}/Task/PutTask/${storedUser.Token}/${task.id}`,
         updatedTask
       );
+      // Ha sikeres a módosítás, akkor XP-t adunk: 10xp minden completed feladat után
+      await axios.put(
+        `${API_URL}/Level/update-xp/${storedUser.Token}`,
+        10,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      // Frissítjük a teendőket és a szint adatokat
       await refreshTasks();
+      await fetchLevelData();
     } catch (error) {
       console.error("Hiba a feladat módosításakor:", error);
     }
@@ -445,8 +509,10 @@ export const Application = () => {
     }
   };
 
+  // Komponens betöltésekor lekérdezzük a teendőket és a szint adatokat
   useEffect(() => {
     fetchTasks();
+    fetchLevelData();
   }, []);
 
   return (
@@ -454,27 +520,21 @@ export const Application = () => {
       <header className="app-header">
         <div className="user-profile">
           <div className="avatar-section">
-            <img
-              src={selectedAvatar}
-              alt="Profilkép"
-              className="avatar"
-            />
+            <img src={selectedAvatar} alt="Profilkép" className="avatar" />
             <div className="username">{storedUser?.FelhasznaloNev}</div>
           </div>
 
-          {/* Módosított stat-szekció: LvL 10 | Streak */}
+          {/* Frissített stat-szekció: LvL és Streak dinamikusan */}
           <div className="stats-section">
-            {/* Egy sorban a LvL és a Streak, '|' jellel */}
             <div className="level-streak-row">
-              <span className="level-text">LvL 10</span>
+              <span className="level-text">LvL {level}</span>
               <span className="streak gamified-streak">
-                10<span className="streak-icon">🔥</span>
+                {streak}
+                <span className="streak-icon">🔥</span>
               </span>
             </div>
-
-            {/* XP sáv alatta marad */}
             <div className="xp-bar">
-              <div className="xp-fill"></div>
+              <div className="xp-fill" style={{ width: xpFillWidth }}></div>
             </div>
           </div>
           <div className="left-menu">
@@ -483,7 +543,6 @@ export const Application = () => {
             <button className="nav-button">Függőségek</button>
           </div>
 
-          {/* Action Buttons: Logout, Beállítások, Téma – jobbra igazítva */}
           <div className="action-buttons">
             <button
               className="theme-toggle-button"
@@ -556,7 +615,6 @@ export const Application = () => {
             </button>
           </div>
         </div>
-
       </header>
 
       <div className="week-grid">
@@ -588,9 +646,7 @@ export const Application = () => {
                         <span
                           className="task-text"
                           style={{
-                            textDecoration: task.completed
-                              ? "line-through"
-                              : "none"
+                            textDecoration: task.completed ? "line-through" : "none"
                           }}
                         >
                           {task.text}
@@ -599,17 +655,16 @@ export const Application = () => {
                       <div
                         className="task-time"
                         style={{
-                          textDecoration: task.completed
-                            ? "line-through"
-                            : "none"
+                          textDecoration: task.completed ? "line-through" : "none"
                         }}
                       >
                         {task.start} - {task.end}
                       </div>
                       <div className="task-actions">
                         <button
-                          className={`action-btn complete-btn ${task.completed ? "completed" : ""
-                            }`}
+                          className={`action-btn complete-btn ${
+                            task.completed ? "completed" : ""
+                          }`}
                           onClick={() => handleCompleteTask(task)}
                           style={{
                             fontSize: task.completed ? "36px" : "28px",
