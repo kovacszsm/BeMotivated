@@ -455,6 +455,11 @@ export const Application = () => {
               <div className="xp-fill"></div>
             </div>
           </div>
+          <div className="left-menu">
+        <button className="nav-button">Kihívások</button>
+        <button className="nav-button">Statisztika</button>
+        <button className="nav-button">Függőségek</button>
+      </div>
 
           {/* Action Buttons: Logout, Beállítások, Téma – jobbra igazítva */}
           <div className="action-buttons">
@@ -529,6 +534,7 @@ export const Application = () => {
             </button>
           </div>
         </div>
+        
       </header>
 
       <div className="week-grid">
