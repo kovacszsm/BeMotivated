@@ -1,5 +1,6 @@
 import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaTiktok } from "react-icons/fa";  // TikTok is importálva
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 export const Footer = () => {
@@ -13,17 +14,17 @@ export const Footer = () => {
     
             {/* Középső rész: Linkek */}
             <div className="footer-links">
-              <a href="#" className="footer-link">Adatvédelem</a>
-              <a href="#" className="footer-link">Impresszum</a>
-              <a href="#" className="footer-link">Kapcsolat</a>
+              <Link to="#" className="footer-link">Adatvédelem</Link>
+              <Link to="#" className="footer-link">Impresszum</Link>
+              <Link to="#" className="footer-link">Kapcsolat</Link>
             </div>
     
             {/* Jobb oldali rész: Közösségi ikonok */}
             <div className="footer-social">
-              <a href="https://facebook.com" className="social-link"><FaFacebook /></a>
-              <a href="https://twitter.com" className="social-link"><FaTwitter /></a>
-              <a href="https://instagram.com" className="social-link"><FaInstagram /></a>
-              <a href="https://tiktok.com" className="social-link"><FaTiktok /></a>
+              <Link to="https://facebook.com" className="social-link" target="_blank"><FaFacebook /></Link>
+              <Link to="https://twitter.com" className="social-link" target="_blank"><FaTwitter /></Link>
+              <Link to="https://instagram.com" className="social-link" target="_blank"><FaInstagram /></Link>
+              <Link to="https://tiktok.com" className="social-link" target="_blank"><FaTiktok /></Link>
             </div>
           </div>
         </footer>

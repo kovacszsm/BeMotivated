@@ -10,6 +10,7 @@ const API_URL = `https://localhost:7040/api`;
 const storedUser = JSON.parse(sessionStorage.getItem("userData"));
 console.log(storedUser?.FelhasznaloNev);
 console.log(storedUser?.Token);
+console.log(storedUser?.Avatar);
 
 // ===============
 // SEGÉDFÜGGVÉNYEK
@@ -194,7 +195,7 @@ export const Application = () => {
 
   // Profilkép állapotainak kezelése
   const [selectedAvatar, setSelectedAvatar] = useState(
-    storedUser?.Avatar || "http://images.vizsgaremekkzsm.nhely.hu/default.jpg"
+    storedUser?.Avatar || "http://bemotivated3.nhely.hu/images/default.jpg"
   );
   const [tempAvatar, setTempAvatar] = useState(selectedAvatar);
   // Tároljuk a feltöltendő file objektumát

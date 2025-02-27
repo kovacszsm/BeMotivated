@@ -57,6 +57,7 @@ export const Registration = () => {
         Email: formData.email,
         Hash: hashedPassword, // SHA-256 hash
         Salt: salt, // Generált salt
+        Profilkep: "default.jpg",
       });
 
       alert("Sikeres regisztráció! Ellenőrizze az emailjeit.");
@@ -65,6 +66,7 @@ export const Registration = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        Profilkep: "default.jpg"
       });
     } catch (error) {
       if (error.response) {
