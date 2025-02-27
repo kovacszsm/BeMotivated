@@ -24,7 +24,7 @@ public class GetProfileImage : ControllerBase
         if (user == null)
             return NotFound("A felhasználó nem található!");
 
-        return Ok(new { profilkep = "http://images.vizsgaremekkzsm.nhely.hu/" + user.Profilkep });
+        return Ok(new { profilkep = "" + user.Profilkep });
     }
 
 }
