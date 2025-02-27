@@ -225,11 +225,11 @@ export const Application = () => {
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-        // A feltöltés után lekérjük a legfrissebb profilképet
+        // A feltöltés után lekérjük a legfrissebb profilképet, és az URL-hez hozzáfűzünk egy időbélyeget a cache törléséhez
         const response = await axios.get(
           `${API_URL}/GetProfileImage/GetProfileImage/${storedUser.Token}`
         );
-        setSelectedAvatar(response.data.profilkep);
+        setSelectedAvatar(response.data.profilkep + "?t=" + Date.now());
       }
     } catch (error) {
       console.error("Hiba a profilkép feltöltésekor:", error);
