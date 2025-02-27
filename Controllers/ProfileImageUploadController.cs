@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Backend.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -9,13 +10,13 @@ namespace Backend.Controllers
     public class ProfileImageUploadController : ControllerBase
     {
         IWebHostEnvironment _env;
-        public ProfileImageUploadController(IWebHostEnvironment env)
+        private readonly AdatbazisContext _context;
+
+        public ProfileImageUploadController(IWebHostEnvironment env, AdatbazisContext context)
         {
             _env = env;
+            _context = context;
         }
-
-
-
 
         [HttpPost("FileUploadFtp/{token}")]
         public async Task<IActionResult> FileUploadFtp(string token)
@@ -33,12 +34,11 @@ namespace Backend.Controllers
                 var postedFile = httpRequest.Files[0];
 
                 // Az eredeti fájlnév helyett a felhasználónevet használjuk, megtartva az eredeti kiterjesztést
-                string extension = Path.GetExtension(postedFile.FileName);
-                string fileName = $"{userName}{extension}";
+                // Itt mindig .jpg-re alakítjuk át a fájlt
+                string fileName = $"{userName}.jpg";
 
-                // A fájl a felhasználó saját mappájába kerül mentésre
-                string subfolder = "/" + userName + "/";
-                var filePath = "ftp://ftp.nethely.hu" + subfolder + fileName;
+                // A fájl az FTP szerveren a gyökérből kerül mentésre
+                var filePath = "ftp://ftp.nethely.hu/" + fileName;
 
                 // Ellenőrizzük, hogy a fájl létezik-e, ha igen, töröljük
                 FtpWebRequest checkRequest = (FtpWebRequest)WebRequest.Create(filePath);
@@ -71,6 +71,15 @@ namespace Backend.Controllers
                 {
                     postedFile.CopyTo(ftpStream);
                 }
+
+                // Adatbázis frissítése: a felhasználó Profilkep mezőjébe mentjük a feltöltött file nevét
+                var dbUser = await _context.Users.FindAsync(user.Id);
+                if (dbUser != null)
+                {
+                    dbUser.Profilkep = fileName;
+                    await _context.SaveChangesAsync();
+                }
+
                 return Ok($"Sikeres feltöltés {fileName}!");
             }
             catch (Exception ex)
@@ -78,7 +87,5 @@ namespace Backend.Controllers
                 return Ok("default.jpg");
             }
         }
-
-
     }
 }
