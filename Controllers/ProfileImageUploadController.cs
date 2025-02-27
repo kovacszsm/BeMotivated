@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Backend.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Net;
@@ -10,9 +11,12 @@ namespace Backend.Controllers
     public class ProfileImageUploadController : ControllerBase
     {
         IWebHostEnvironment _env;
-        public ProfileImageUploadController(IWebHostEnvironment env)
+        private readonly AdatbazisContext _context;
+
+        public ProfileImageUploadController(IWebHostEnvironment env, AdatbazisContext context)
         {
             _env = env;
+            _context = context;
         }
 
         // FTP hitelesítő adatok
