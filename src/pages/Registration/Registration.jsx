@@ -70,9 +70,7 @@ export const Registration = () => {
       });
     } catch (error) {
       if (error.response) {
-        alert(`Hiba: ${error.response.data}`);
       } else {
-        alert("Hiba történt a regisztráció során.");
       }
     }
   };

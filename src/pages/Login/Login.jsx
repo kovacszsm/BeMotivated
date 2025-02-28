@@ -56,7 +56,6 @@ export const Login = () => {
 
                 window.location.href = '/application'; // Átirányítás
             } else {
-                alert('Hibás felhasználónév vagy jelszó!');
             }
         } catch (error) {
             alert(error.message || 'Kapcsolati hiba. Próbálja újra később.');
