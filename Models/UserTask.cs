@@ -8,7 +8,7 @@ public partial class UserTask
 {
     public int Id { get; set; }
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public int CategoryId { get; set; }
 
@@ -21,8 +21,5 @@ public partial class UserTask
     public bool Completed { get; set; }
 
     [JsonIgnore]
-    public virtual PredefinedTask? Category { get; set; } = null!;
-
-    [JsonIgnore]
-    public virtual User? User { get; set; } = null!;
+    public virtual User User { get; set; } = null!;
 }

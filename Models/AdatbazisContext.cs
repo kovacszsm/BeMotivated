@@ -15,6 +15,8 @@ public partial class AdatbazisContext : DbContext
     {
     }
 
+    public virtual DbSet<CategoryType> CategoryTypes { get; set; }
+
     public virtual DbSet<PredefinedTask> PredefinedTasks { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -27,24 +29,47 @@ public partial class AdatbazisContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<CategoryType>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("category_type");
+
+            entity.HasIndex(e => e.Name, "name").IsUnique();
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.Name).HasColumnName("name");
+        });
+
         modelBuilder.Entity<PredefinedTask>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
             entity.ToTable("predefined_tasks");
 
+            entity.HasIndex(e => e.CategoryId, "category_id");
+
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("id");
-            entity.Property(e => e.Category)
-                .HasMaxLength(50)
-                .HasColumnName("category");
+            entity.Property(e => e.CategoryId)
+                .HasDefaultValueSql("'NULL'")
+                .HasColumnType("int(11)")
+                .HasColumnName("category_id");
             entity.Property(e => e.Icon)
                 .HasMaxLength(10)
+                .HasDefaultValueSql("'NULL'")
                 .HasColumnName("icon");
-            entity.Property(e => e.TaskText)
-                .HasMaxLength(100)
-                .HasColumnName("task_text");
+            entity.Property(e => e.Text)
+                .HasMaxLength(255)
+                .HasColumnName("text");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.PredefinedTasks)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("predefined_tasks_ibfk_1");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -96,10 +121,6 @@ public partial class AdatbazisContext : DbContext
             entity.Property(e => e.StartTime).HasMaxLength(5);
             entity.Property(e => e.TaskDate).HasColumnType("date");
             entity.Property(e => e.UserId).HasColumnType("int(10) unsigned");
-
-            entity.HasOne(d => d.Category).WithMany(p => p.UserTasks)
-                .HasForeignKey(d => d.CategoryId)
-                .HasConstraintName("user_tasks_ibfk_2");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserTasks)
                 .HasForeignKey(d => d.UserId)

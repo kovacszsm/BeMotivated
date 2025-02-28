@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Backend.Models;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Backend.Models; // itt a modellek elérési útja
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Backend.Controllers
 {
@@ -9,38 +11,30 @@ namespace Backend.Controllers
     [ApiController]
     public class PredefinedTaskController : ControllerBase
     {
-        [HttpGet]
+        private readonly AdatbazisContext _context;
 
-        public async Task<IActionResult> GetPredefinedTasks()
+        public PredefinedTaskController(AdatbazisContext context)
         {
-            using (var context = new AdatbazisContext())
-            {
-                try
-                {
-                    return Ok(await context.PredefinedTasks.ToListAsync());
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
+            _context = context;
         }
 
-        [HttpGet("ById/{id}")]
-
-        public async Task<IActionResult> GetPredefinedTasks(int id)
+        // GET: api/PredefinedTask
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PredefinedTaskDTO>>> GetPredefinedTasks()
         {
-            using (var context = new AdatbazisContext())
+            var tasks = await _context.PredefinedTasks
+                .Include(pt => pt.Category)
+                .ToListAsync();
+
+            var result = tasks.Select(pt => new PredefinedTaskDTO
             {
-                try
-                {
-                    return Ok(await context.PredefinedTasks.FirstOrDefaultAsync(f=>f.Id==id));
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
+                Id = pt.Id,
+                Category = pt.Category?.Name,
+                TaskText = pt.Text,
+                Icon = pt.Icon
+            }).ToList();
+
+            return Ok(result);
         }
     }
 }

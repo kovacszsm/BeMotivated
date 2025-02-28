@@ -32,18 +32,25 @@ public class TaskController : ControllerBase
         return Ok(UserTasks);
     }
 
-    // **POST /UserTasks/{token}** → Új feladat hozzáadása
     [HttpPost("PostTask/{token}")]
-    public async Task<ActionResult<UserTask>> AddTask(string token, [FromBody] UserTask newTask)
+    public async Task<ActionResult<UserTask>> AddTask(string token, [FromBody] CreateUserTaskDTO newTaskDto)
     {
         if (!Program.LoggedInUsers.ContainsKey(token))
             return Unauthorized("Érvénytelen token!");
 
-        if (newTask == null)
+        if (newTaskDto == null)
             return BadRequest("A feladat nem lehet üres!");
 
         var user = Program.LoggedInUsers[token];
-        newTask.UserId = user.Id;
+        var newTask = new UserTask
+        {
+            CategoryId = newTaskDto.CategoryId,
+            StartTime = newTaskDto.StartTime,
+            EndTime = newTaskDto.EndTime,
+            TaskDate = newTaskDto.TaskDate,
+            Completed = newTaskDto.Completed,
+            UserId = user.Id  // itt állítjuk be a token alapján
+        };
 
         _context.UserTasks.Add(newTask);
         await _context.SaveChangesAsync();
@@ -52,9 +59,9 @@ public class TaskController : ControllerBase
     }
 
 
-    // **PUT /UserTasks/{token}/{taskId}** → Feladat módosítása
+
     [HttpPut("PutTask/{token}/{taskId}")]
-    public async Task<IActionResult> UpdateTask(string token, int taskId, [FromBody] UserTask updatedTask)
+    public async Task<IActionResult> UpdateTask(string token, int taskId, [FromBody] UpdateUserTaskDTO updatedTaskDto)
     {
         if (!Program.LoggedInUsers.ContainsKey(token))
             return Unauthorized("Érvénytelen token!");
@@ -65,15 +72,18 @@ public class TaskController : ControllerBase
         if (existingTask == null)
             return NotFound("Feladat nem található!");
 
-        existingTask.CategoryId = updatedTask.CategoryId;
-        existingTask.StartTime = updatedTask.StartTime;
-        existingTask.EndTime = updatedTask.EndTime;
-        existingTask.TaskDate = updatedTask.TaskDate;
-        existingTask.Completed = updatedTask.Completed;
+        // A kliens nem küldi a UserId-t, így a backend a token alapján állítja be.
+        existingTask.CategoryId = updatedTaskDto.CategoryId;
+        existingTask.StartTime = updatedTaskDto.StartTime;
+        existingTask.EndTime = updatedTaskDto.EndTime;
+        existingTask.TaskDate = updatedTaskDto.TaskDate;
+        existingTask.Completed = updatedTaskDto.Completed;
 
         await _context.SaveChangesAsync();
+
         return Ok(existingTask);
     }
+
 
     // **DELETE /UserTasks/{token}/{taskId}** → Feladat törlése
     [HttpDelete("DeleteTask/{token}/{taskId}")]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Backend.Models;
 
@@ -27,5 +28,6 @@ public partial class User
 
     public string Profilkep { get; set; } = null!;
 
+    [JsonIgnore]    
     public virtual ICollection<UserTask> UserTasks { get; set; } = new List<UserTask>();
 }

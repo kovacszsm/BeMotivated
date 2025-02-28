@@ -8,12 +8,12 @@ public partial class PredefinedTask
 {
     public int Id { get; set; }
 
-    public string Category { get; set; } = null!;
+    public int? CategoryId { get; set; }
 
-    public string TaskText { get; set; } = null!;
+    public string Text { get; set; } = null!;
 
-    public string Icon { get; set; } = null!;
+    public string? Icon { get; set; }
 
     [JsonIgnore]
-    public virtual ICollection<UserTask> UserTasks { get; set; } = new List<UserTask>();
+    public virtual CategoryType? Category { get; set; }
 }
