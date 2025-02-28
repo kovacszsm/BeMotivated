@@ -25,10 +25,6 @@ export const Header = ({
         <div className="stats-section">
           <div className="level-streak-row">
             <span className="level-text">LvL {level}</span>
-            <span className="streak gamified-streak">
-              {streak}
-              <span className="streak-icon">🔥</span>
-            </span>
           </div>
           <div className="xp-bar">
             <div className="xp-fill" style={{ width: xpFillWidth }}></div>
@@ -36,12 +32,6 @@ export const Header = ({
         </div>
 
         <div className="left-menu">
-          <button
-            className={`nav-button ${currentView === "kihivasok" ? "active" : ""}`}
-            onClick={() => handleNavClick("kihivasok")}
-          >
-            Kihívások
-          </button>
           <button
             className={`nav-button ${currentView === "statisztika" ? "active" : ""}`}
             onClick={() => handleNavClick("statisztika")}

@@ -20,6 +20,12 @@ export const Teendok = ({
   // nem a lokális objektumot.
   predefinedTasks
 }) => {
+  // Számoljuk ki a mai napot a megfelelő formátumban (YYYY.MM.DD)
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}.${(today.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}.${today.getDate().toString().padStart(2, "0")}`;
+
   return (
     <div className="teendok-container">
       <div className="week-grid">
@@ -70,12 +76,19 @@ export const Teendok = ({
                         className={`action-btn complete-btn ${
                           task.completed ? "completed" : ""
                         }`}
-                        onClick={() => handleCompleteTask(task)}
+                        onClick={() => {
+                          // Csak az aznapi teendők esetén hívjuk meg a handleCompleteTask függvényt
+                          if (date === todayStr && !task.completed) {
+                            handleCompleteTask(task);
+                          }
+                        }}
+                        disabled={date !== todayStr}
                         style={{
                           fontSize: task.completed ? "36px" : "28px",
                           color: task.completed
                             ? "var(--accent-color)"
-                            : "inherit"
+                            : "inherit",
+                          cursor: date !== todayStr ? "not-allowed" : "pointer"
                         }}
                       >
                         ✔

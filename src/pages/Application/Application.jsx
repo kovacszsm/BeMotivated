@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 
 // Importáljuk a komponenseket
 import { Header } from "../../components/App/Header/Header";
-import { Kihivasok } from "../../components/App/Kihivasok/Kihivasok";
 import { Statisztika } from "../../components/App/Statisztika/Statisztika";
 import { Teendok } from "../../components/App/Teendok/Teendok";
 
@@ -440,8 +439,9 @@ export const Application = () => {
           predefinedTasks={predefinedTasksFromAPI}
         />
       )}
-      {currentView === "kihivasok" && <Kihivasok />}
-      {currentView === "statisztika" && <Statisztika />}
+      {currentView === "statisztika" && <Statisztika tasks={tasks} />}
+
+
 
       {showSettingsModal && (
         <div className="modal-overlay">
