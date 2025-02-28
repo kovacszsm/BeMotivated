@@ -47,46 +47,8 @@ const dayNames = (() => {
   });
 })();
 
-// Predefiniált tevékenységek
+// Alapértelmezett teendők (üres objektum, mert az adatokat az API-tól töltjük be)
 const initialTasks = {};
-
-const predefinedTasks = {
-  "Sport & Testmozgás": [
-    { id: 1, text: "Edzés", icon: "🏋️‍♂️" },
-    { id: 2, text: "Futás", icon: "🏃‍♂️" }
-    // ... további tevékenységek
-  ],
-  "Egészség & Wellness": [
-    { id: 41, text: "Orvosi vizsgálat", icon: "🏥" }
-    // ... további tevékenységek
-  ],
-  "Munka & Tanulás": [
-    { id: 52, text: "Munka", icon: "💼" }
-    // ... további tevékenységek
-  ],
-  "Szórakozás & Hobbi": [
-    { id: 66, text: "Filmnézés", icon: "🎬" }
-    // ... további tevékenységek
-  ],
-  "Kapcsolatok & Szociális élet": [
-    { id: 83, text: "Családi időtöltés", icon: "🏡" }
-    // ... további tevékenységek
-  ],
-  "Hétköznapi Teendők": [
-    { id: 95, text: "Bevásárlás", icon: "🛒" }
-    // ... további tevékenységek
-  ]
-};
-
-const getPredefinedTaskDetails = (categoryId) => {
-  for (const cat in predefinedTasks) {
-    const found = predefinedTasks[cat].find(
-      (task) => task.id === Number(categoryId)
-    );
-    if (found) return found;
-  }
-  return { text: "Nincs megnevezés", icon: "❓" };
-};
 
 export const Application = () => {
   const navigate = useNavigate();
@@ -99,7 +61,8 @@ export const Application = () => {
 
   // Profilkép
   const [selectedAvatar, setSelectedAvatar] = useState(
-    storedUser?.Avatar || "http://images.vizsgaremekkzsm.nhely.hu/default.jpg"
+    storedUser?.Avatar ||
+      "http://images.vizsgaremekkzsm.nhely.hu/default.jpg"
   );
   const [tempAvatar, setTempAvatar] = useState(selectedAvatar);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -111,8 +74,8 @@ export const Application = () => {
   const [tasks, setTasks] = useState(initialTasks);
   const [showModal, setShowModal] = useState(false);
   const [modalDate, setModalDate] = useState(null);
+  // Új teendő létrehozásához: csak a taskId, start és end kerül kiválasztásra
   const [newTaskData, setNewTaskData] = useState({
-    category: "",
     taskId: "",
     start: "",
     end: ""
@@ -128,15 +91,48 @@ export const Application = () => {
   // Nézetváltás: alapértelmezett "teendok"
   const [currentView, setCurrentView] = useState("teendok");
 
-  // Hook-ok
-  useEffect(() => {
-    if (theme === "dark") {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
+  // Predefiniált tevékenységek az API-ról
+  const [loadedPredefinedTasks, setLoadedPredefinedTasks] = useState({});
+  const fetchPredefinedTasks = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/PredefinedTask`);
+      // Várt szerkezet: [{ Id, Category, TaskText, Icon }, ...]
+      const tasksArray = response.data;
+      const grouped = tasksArray.reduce((acc, item) => {
+        const catName = item.Category || "Ismeretlen kategória";
+        if (!acc[catName]) {
+          acc[catName] = [];
+        }
+        acc[catName].push({
+          id: item.Id,
+          text: item.TaskText,
+          icon: item.Icon
+        });
+        return acc;
+      }, {});
+      console.log("Csoportosított predefinedTasks:", grouped);
+      setLoadedPredefinedTasks(grouped);
+    } catch (error) {
+      console.error("Hiba a PredefinedTask lekérésekor:", error);
     }
-  }, [theme]);
+  };
 
+  // Függvény: CategoryId alapján visszaadja a predefiniált tevékenység részleteit
+  const getPredefinedTaskDetails = (categoryId) => {
+    if (Object.keys(loadedPredefinedTasks).length === 0) return null;
+    for (const cat in loadedPredefinedTasks) {
+      const found = loadedPredefinedTasks[cat].find(
+        (task) => task.id === Number(categoryId)
+      );
+      if (found) return found;
+    }
+    return { text: "Nincs megnevezés", icon: "❓" };
+  };
+
+  // Az API által betöltött predefiniált tevékenységek objektumát továbbadjuk a Teendok komponensnek
+  const predefinedTasksFromAPI = loadedPredefinedTasks;
+
+  // Hook: Profilkép lekérése
   useEffect(() => {
     const fetchProfileImage = async () => {
       try {
@@ -151,12 +147,33 @@ export const Application = () => {
     fetchProfileImage();
   }, []);
 
+  // Hook: Teendők, szint adatok és predefiniált tevékenységek betöltése
   useEffect(() => {
     fetchTasks();
     fetchLevelData();
+    fetchPredefinedTasks();
   }, []);
 
-  // Függvények
+  // useEffect, amely frissíti a már betöltött feladatok text-jét és ikonját, miután a predefiniált adatok beérkeztek
+  useEffect(() => {
+    if (Object.keys(loadedPredefinedTasks).length > 0) {
+      setTasks((prevTasks) => {
+        const updatedTasks = { ...prevTasks };
+        Object.keys(updatedTasks).forEach((date) => {
+          updatedTasks[date] = updatedTasks[date].map((task) => {
+            const details = getPredefinedTaskDetails(task.CategoryId);
+            return {
+              ...task,
+              text: details ? details.text : task.text,
+              icon: details ? details.icon : task.icon
+            };
+          });
+        });
+        return updatedTasks;
+      });
+    }
+  }, [loadedPredefinedTasks]);
+
   const handleNavClick = (view) => {
     setCurrentView(view);
   };
@@ -166,9 +183,7 @@ export const Application = () => {
     if (file) {
       setSelectedFile(file);
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setTempAvatar(reader.result);
-      };
+      reader.onloadend = () => setTempAvatar(reader.result);
       reader.readAsDataURL(file);
     }
   };
@@ -206,14 +221,15 @@ export const Application = () => {
       response.data.forEach((task) => {
         const dateStr = formatLocalDate(new Date(task.TaskDate));
         if (!tasksByDate[dateStr]) tasksByDate[dateStr] = [];
-        const predefinedTask = getPredefinedTaskDetails(task.CategoryId);
+        // Próbáljuk meg a predefiniált adatokból kikeresni a text-et és az ikont
+        const details = getPredefinedTaskDetails(task.CategoryId);
         tasksByDate[dateStr].push({
           id: task.Id,
           start: task.StartTime,
           end: task.EndTime,
           completed: task.Completed,
-          text: predefinedTask.text,
-          icon: predefinedTask.icon,
+          text: details && details.text ? details.text : task.TaskText,
+          icon: details && details.icon ? details.icon : "",
           CategoryId: task.CategoryId,
           TaskDate: task.TaskDate
         });
@@ -241,7 +257,7 @@ export const Application = () => {
   const openModal = (date) => {
     setModalDate(date);
     setShowModal(true);
-    setNewTaskData({ category: "", taskId: "", start: "", end: "" });
+    setNewTaskData({ taskId: "", start: "", end: "" });
     setModalError("");
   };
 
@@ -252,13 +268,7 @@ export const Application = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewTaskData((prev) => ({
-      ...prev,
-      [name]: value
-    }));
-    if (name === "category") {
-      setNewTaskData((prev) => ({ ...prev, taskId: "" }));
-    }
+    setNewTaskData((prev) => ({ ...prev, [name]: value }));
   };
 
   const timeStringToMinutes = (timeStr) => {
@@ -273,15 +283,13 @@ export const Application = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setModalError("");
-    const { category, taskId, start, end } = newTaskData;
-    if (!category || !taskId || !start || !end) {
+    const { taskId, start, end } = newTaskData;
+    if (!taskId || !start || !end) {
       setModalError("Minden mezőt ki kell tölteni!");
       return;
     }
     if (start >= end) {
-      setModalError(
-        "A kezdési időnek kisebbnek kell lennie, mint a befejezési idő!"
-      );
+      setModalError("A kezdési időnek kisebbnek kell lennie, mint a befejezési idő!");
       return;
     }
     if (!modalDate) {
@@ -318,9 +326,11 @@ export const Application = () => {
       setModalError("Hibás dátumformátum!");
       return;
     }
+    // A POST payloadban a CategoryId értéke a kiválasztott taskId-vel egyezik meg.
+    // A backend a token alapján állítja be a helyes UserId-t.
     const taskToAdd = {
       Id: 0,
-      UserId: 0,
+      UserId: 0, // A backend fogja felülírni
       CategoryId: Number(taskId),
       StartTime: start,
       EndTime: end,
@@ -345,10 +355,11 @@ export const Application = () => {
     }
   };
 
+  // A handleCompleteTask módosítva van, hogy a UserId értékét a tokenből kinyert, érvényes felhasználói azonosítóval töltse ki.
   const handleCompleteTask = async (task) => {
     const updatedTask = {
       Id: task.id,
-      UserId: 0,
+      UserId: storedUser.FelhasznaloId || 0, // itt használd a valós felhasználói azonosítót
       CategoryId: task.CategoryId,
       StartTime: task.start,
       EndTime: task.end,
@@ -396,7 +407,6 @@ export const Application = () => {
 
   return (
     <div className={`application ${theme === "dark" ? "dark-mode" : ""}`}>
-      {/* Fix fejléc */}
       <Header
         theme={theme}
         toggleTheme={toggleTheme}
@@ -411,7 +421,6 @@ export const Application = () => {
         currentView={currentView}
       />
 
-      {/* Csak a kiválasztott nézet jelenik meg */}
       {currentView === "teendok" && (
         <Teendok
           weekDates={weekDates}
@@ -427,13 +436,13 @@ export const Application = () => {
           handleSubmit={handleSubmit}
           modalError={modalError}
           closeModal={closeModal}
-          predefinedTasks={predefinedTasks}
+          // Az API által betöltött predefiniált tevékenységek továbbadása
+          predefinedTasks={predefinedTasksFromAPI}
         />
       )}
       {currentView === "kihivasok" && <Kihivasok />}
       {currentView === "statisztika" && <Statisztika />}
 
-      {/* Beállítások modal */}
       {showSettingsModal && (
         <div className="modal-overlay">
           <div className="modal-content settings-modal-content">

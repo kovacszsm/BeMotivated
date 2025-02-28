@@ -16,6 +16,8 @@ export const Teendok = ({
   handleSubmit,
   modalError,
   closeModal,
+  // Most ezt a prop-ot várjuk az API által betöltött adatokkal,
+  // nem a lokális objektumot.
   predefinedTasks
 }) => {
   return (
@@ -71,7 +73,9 @@ export const Teendok = ({
                         onClick={() => handleCompleteTask(task)}
                         style={{
                           fontSize: task.completed ? "36px" : "28px",
-                          color: task.completed ? "var(--accent-color)" : "inherit"
+                          color: task.completed
+                            ? "var(--accent-color)"
+                            : "inherit"
                         }}
                       >
                         ✔
