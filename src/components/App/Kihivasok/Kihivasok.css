@@ -1,0 +1,6 @@
+.kihivasok-container {
+  margin-top: 120px; /* a header helye miatt */
+  padding: 20px;
+  text-align: center;
+  color: var(--text-color);
+}

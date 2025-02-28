@@ -1,0 +1,232 @@
+/* Az eredeti stílus alapján – nem változtatva a layouton! */
+
+:root {
+  --bg-gradient: linear-gradient(135deg, #fafafa 0%, #eaeaea 100%);
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  --text-color: #222;
+  --icon-color: #222;
+  --accent-color: #4caf50;
+  --accent-hover: #43a047;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-hover-bg: #fff;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --card-hover-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  --modal-bg: #fff;
+  --modal-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --dropdown-bg: #fff;
+  --dropdown-border: #ddd;
+  --button-bg: #4caf50;
+  --button-hover-bg: #43a047;
+  --cancel-button-bg: #4caf50;
+  --cancel-button-hover-bg: #43a047;
+}
+
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: var(--header-bg);
+  backdrop-filter: blur(8px);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: var(--header-shadow);
+  z-index: 999;
+  border-bottom: none;
+}
+
+/* A felhasználói adatok és statisztikák az eredeti beállítások szerint */
+.user-profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  gap: 20px;
+  padding: 10px 20px;
+}
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.username {
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.stats-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.level-streak-row {
+  display: flex;
+  align-items: center;
+  gap: 27px;
+}
+
+.level-text {
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.gamified-streak {
+  animation: pulse 1.5s infinite alternate;
+  color: var(--text-color);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); color: var(--text-color); }
+  100% { transform: scale(1.1); color: #ffcc00; }
+}
+
+.streak-icon {
+  margin-left: 3px;
+  color: #ff8c00;
+}
+
+.xp-bar {
+  width: 120px;
+  height: 6px;
+  background-color: rgb(218,218,208);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffcc00, #ff6a00);
+  transition: width 0.5s ease-in-out;
+}
+
+/* Navigáció */
+.left-menu {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+.nav-button {
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 30px;
+  transition: background 0.3s ease, box-shadow 0.3s ease, opacity 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-button:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-color));
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.nav-button:active {
+  /* Finom opacitás csökkentés, de nem zsugorodik */
+  opacity: 0.95;
+}
+
+/* Akció gombok */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.theme-toggle-button,
+.settings-button,
+.logout-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.theme-toggle-button:hover,
+.settings-button:hover,
+.logout-button:hover {
+  transform: scale(1.1);
+}
+
+/* Tooltip */
+.theme-toggle-button::after,
+.logout-button::after,
+.settings-button::after,
+.theme-toggle-button::before,
+.logout-button::before,
+.settings-button::before {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle-button::after,
+.logout-button::after,
+.settings-button::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--accent-color);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+.theme-toggle-button::before,
+.logout-button::before,
+.settings-button::before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--accent-color);
+  z-index: 10;
+}
+
+.theme-toggle-button:hover::after,
+.logout-button:hover::after,
+	settings-button:hover::after,
+.theme-toggle-button:hover::before,
+.logout-button:hover::before,
+.settings-button:hover::before {
+  opacity: 1;
+}
+
+/* Dark mode override */
+.dark-mode .theme-toggle-button,
+.dark-mode .logout-button,
+.dark-mode .settings-button {
+  color: #fff;
+}
