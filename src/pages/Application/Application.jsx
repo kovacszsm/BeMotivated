@@ -288,7 +288,7 @@ export const Application = () => {
   const fetchTasks = async () => {
     try {
       const response = await axios.get(
-        `${API_URL}/Task/GetTasks/${storedUser.Token}`
+        `${API_URL}/Task/GetUserTasks/${storedUser.Token}`
       );
       const tasksByDate = {};
       response.data.forEach((task) => {
