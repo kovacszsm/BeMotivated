@@ -25,5 +25,7 @@ public partial class User
 
     public int Xp { get; set; }
 
-    public string Profilkep { get; set; }
+    public string Profilkep { get; set; } = null!;
+
+    public virtual ICollection<UserTask> UserTasks { get; set; } = new List<UserTask>();
 }

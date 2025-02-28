@@ -19,22 +19,22 @@ public class TaskController : ControllerBase
         _context = context;
     }
 
-    // **GET /Tasks/{token}** → Felhasználó összes feladata
-    [HttpGet("GetTasks/{token}")]
-    public async Task<ActionResult<IEnumerable<Tasks>>> GetUserTasks(string token)
+    // **GET /UserTasks/{token}** → Felhasználó összes feladata
+    [HttpGet("GetUserTasks/{token}")]
+    public async Task<ActionResult<IEnumerable<UserTask>>> GetUserUserTasks(string token)
     {
         if (!Program.LoggedInUsers.ContainsKey(token))
             return Unauthorized("Érvénytelen token!");
 
         var user = Program.LoggedInUsers[token];
-        var tasks = await _context.Tasks.Where(t => t.UserId == user.Id).ToListAsync();
+        var UserTasks = await _context.UserTasks.Where(t => t.UserId == user.Id).ToListAsync();
 
-        return Ok(tasks);
+        return Ok(UserTasks);
     }
 
-    // **POST /Tasks/{token}** → Új feladat hozzáadása
+    // **POST /UserTasks/{token}** → Új feladat hozzáadása
     [HttpPost("PostTask/{token}")]
-    public async Task<ActionResult<Tasks>> AddTask(string token, [FromBody] Tasks newTask)
+    public async Task<ActionResult<UserTask>> AddTask(string token, [FromBody] UserTask newTask)
     {
         if (!Program.LoggedInUsers.ContainsKey(token))
             return Unauthorized("Érvénytelen token!");
@@ -45,22 +45,22 @@ public class TaskController : ControllerBase
         var user = Program.LoggedInUsers[token];
         newTask.UserId = user.Id;
 
-        _context.Tasks.Add(newTask);
+        _context.UserTasks.Add(newTask);
         await _context.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetUserTasks), new { token = token }, newTask);
+        return CreatedAtAction(nameof(GetUserUserTasks), new { token = token }, newTask);
     }
 
 
-    // **PUT /Tasks/{token}/{taskId}** → Feladat módosítása
+    // **PUT /UserTasks/{token}/{taskId}** → Feladat módosítása
     [HttpPut("PutTask/{token}/{taskId}")]
-    public async Task<IActionResult> UpdateTask(string token, int taskId, [FromBody] Tasks updatedTask)
+    public async Task<IActionResult> UpdateTask(string token, int taskId, [FromBody] UserTask updatedTask)
     {
         if (!Program.LoggedInUsers.ContainsKey(token))
             return Unauthorized("Érvénytelen token!");
 
         var user = Program.LoggedInUsers[token];
-        var existingTask = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == user.Id);
+        var existingTask = await _context.UserTasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == user.Id);
 
         if (existingTask == null)
             return NotFound("Feladat nem található!");
@@ -75,7 +75,7 @@ public class TaskController : ControllerBase
         return Ok(existingTask);
     }
 
-    // **DELETE /Tasks/{token}/{taskId}** → Feladat törlése
+    // **DELETE /UserTasks/{token}/{taskId}** → Feladat törlése
     [HttpDelete("DeleteTask/{token}/{taskId}")]
     public async Task<IActionResult> DeleteTask(string token, int taskId)
     {
@@ -83,12 +83,12 @@ public class TaskController : ControllerBase
             return Unauthorized("Érvénytelen token!");
 
         var user = Program.LoggedInUsers[token];
-        var task = await _context.Tasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == user.Id);
+        var task = await _context.UserTasks.FirstOrDefaultAsync(t => t.Id == taskId && t.UserId == user.Id);
 
         if (task == null)
             return NotFound("Feladat nem található!");
 
-        _context.Tasks.Remove(task);
+        _context.UserTasks.Remove(task);
         await _context.SaveChangesAsync();
 
         return Ok("Feladat törölve!");
