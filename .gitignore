@@ -1,0 +1,12 @@
+# Build és debug fájlok
+bin/
+obj/
+
+# Visual Studio és VS Code beállítások
+.vs/
+.vscode/
+
+# User-specifikus fájlok
+*.user
+*.suo
+*.pdb
