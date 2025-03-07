@@ -62,10 +62,10 @@ export const Home = () =>  {
                             <p className="price">0 Ft</p>
                             <p className="subtitle">Örökké ingyenes</p>
                             <ul>
-                                <li><p><i className="check">✔</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-                                <li><p><i className="check">✔</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-                                <li><p><i className="cross">✖</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-                                <li><p><i className="cross">✖</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
+                                <li><p><i className="check">✔</i> Napi teendők beállítása.</p></li>
+                                <li><p><i className="check">✔</i> Sötét és világos témák.</p></li>
+                                <li><p><i className="cross">✖</i> Profilkép feltöltése.</p></li>
+                                <li><p><i className="cross">✖</i> Részletes statisztikai adatok.</p></li>
                             </ul>
                         </div>
 
@@ -74,10 +74,10 @@ export const Home = () =>  {
                             <p className="price">500 Ft /hónap</p>
                             <p className="discount"><span className="strike">6000 Ft/év</span> ➔ <span className="highlight">4200 Ft/év</span></p>
                             <ul>
-                                <li><p><i className="check">✔</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-                                <li><p><i className="check">✔</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-                                <li><p><i className="check">✔</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
-                                <li><p><i className="check">✔</i> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></li>
+                                <li><p><i className="check">✔</i> Napi teendők beállítása.</p></li>
+                                <li><p><i className="check">✔</i> Sötét és világos témák.</p></li>
+                                <li><p><i className="check">✔</i> Profilkép feltöltése.</p></li>
+                                <li><p><i className="check">✔</i> Részletes statisztikai adatok.</p></li>
                             </ul>
                         </div>
                     </div>
