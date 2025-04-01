@@ -1,7 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Registration } from './Registration';
-const axios = require('axios');
+import axios from "axios";
+module.exports = {
+  presets: ['@babel/preset-env', '@babel/preset-react']
+};
+
 jest.mock('axios');
 
 // Mock crypto.subtle.digest (SHA-256 hash)

@@ -32,11 +32,11 @@ describe("Login komponens", () => {
     const usernameInput = screen.getByPlaceholderText("Felhasználónév");
     const passwordInput = screen.getByPlaceholderText("Jelszó");
 
-    fireEvent.change(usernameInput, { target: { value: "testuser" } });
-    fireEvent.change(passwordInput, { target: { value: "secret" } });
+    fireEvent.change(usernameInput, { target: { value: "Zsoltyx" } });
+    fireEvent.change(passwordInput, { target: { value: "ASD1234" } });
 
-    expect(usernameInput.value).toBe("testuser");
-    expect(passwordInput.value).toBe("secret");
+    expect(usernameInput.value).toBe("Zsoltyx");
+    expect(passwordInput.value).toBe("ASD1234");
   });
 
   it("hibát jelez, ha az űrlap nincs kitöltve", async () => {
@@ -56,7 +56,7 @@ describe("Login komponens", () => {
         return Promise.resolve({ data: "SALT123" });
       }
       if (url === "https://localhost:7040/api/Login") {
-        return Promise.resolve({ status: 200, data: { username: "testuser", token: "abc123" } });
+        return Promise.resolve({ status: 200, data: { username: "Zsoltyx", token: "ASD1234" } });
       }
     });
 
@@ -69,8 +69,8 @@ describe("Login komponens", () => {
     const usernameInput = screen.getByPlaceholderText("Felhasználónév");
     const passwordInput = screen.getByPlaceholderText("Jelszó");
 
-    fireEvent.change(usernameInput, { target: { value: "testuser" } });
-    fireEvent.change(passwordInput, { target: { value: "secret" } });
+    fireEvent.change(usernameInput, { target: { value: "Zsoltyx" } });
+    fireEvent.change(passwordInput, { target: { value: "ASD1234" } });
 
     const submitButton = screen.getByText("Bejelentkezés");
     fireEvent.click(submitButton);
@@ -103,8 +103,8 @@ describe("Login komponens", () => {
     const usernameInput = screen.getByPlaceholderText("Felhasználónév");
     const passwordInput = screen.getByPlaceholderText("Jelszó");
 
-    fireEvent.change(usernameInput, { target: { value: "nonexistent" } });
-    fireEvent.change(passwordInput, { target: { value: "secret" } });
+    fireEvent.change(usernameInput, { target: { value: "Zsoltyx" } });
+    fireEvent.change(passwordInput, { target: { value: "ASD1234" } });
 
     const submitButton = screen.getByText("Bejelentkezés");
     fireEvent.click(submitButton);
